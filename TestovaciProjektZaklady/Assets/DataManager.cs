@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -15,17 +18,20 @@ public class DataManager : MonoBehaviour
         saveFile3,
     }
 
-    // Start is called before the first frame update
-    /*
-    void Start()
+    
+    async Task StartAsync()
     {
-        List<int> objekty = GetIDsObjektu();
+        //List<int> objekty = GetIDsObjektu();
+        List<int> objekty = new List<int>();
+        objekty.Add(10);
+        objekty.Add(199);
+
         //int i = 0;
         foreach (int objektID in objekty)
         {
 
             string urlToRequestNow = urlToRequest.Replace($"#OBJEKTTOREPLACE#", objektID.ToString());
-            
+            await RequestNaApi(urlToRequestNow);
             //Debug.Log(i++);
             System.Threading.Thread.Sleep(10000);
 
@@ -33,7 +39,7 @@ public class DataManager : MonoBehaviour
         
     }
 
-    static string RequestNaApi(string urlToRequest)
+    static async Task RequestNaApi(string urlToRequest)
     {
         //V˝sledek tohoto testu bylo, ûe API m· neuvÏ¯itelnÏ chaotickÈ se¯azenÌ dat - i ve form·tu JSON je form·t OBJ_Data prakticky n·hodn˝ (˙plnÏ jin· pozice stejn˝ch hodnot a nÏkdy hodnoty majÌ i r˘znÈ n·zvy).
 
@@ -41,38 +47,33 @@ public class DataManager : MonoBehaviour
         //string urlToRequest = $"https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27499%27&OBJ_DATA=%27YES%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27OBSERVER%27&CENTER=%27500@399%27&START_TIME=%272006-01-01%27&STOP_TIME=%272006-01-20%27&STEP_SIZE=%271%20d%27&QUANTITIES=%271,9,20,23,24,29%27";
         using (UnityWebRequest webRequest = UnityWebRequest.Get(urlToRequest))
         {
-            yield return webRequest.SendWebRequest();
-            switch (webRequest.result)
+            webRequest.SendWebRequest();
+            while (!webRequest.isDone)
             {
-                case UnityWebRequest.Result.ConnectionError:
-                case UnityWebRequest.Result.DataProcessingError:
-                    Debug.LogError("Error: " + webRequest.error);
-                    break;
-                case UnityWebRequest.Result.ProtocolError:
-                    Debug.LogError("HTTP Error: " + webRequest.error);
-                    break;
-                case UnityWebRequest.Result.Success:
-                    Debug.Log("Received: " + webRequest.downloadHandler.text);
-                    break;
+                await Task.Yield();
             }
-        }
 
-        string responseBody = await response.Content.ReadAsStringAsync();
-        responseBody = Regex.Replace(responseBody, @"\s+", " ");
-        string[] splitters = { "*******************************************************************************", "*******************************************" };
-        string[] parts = responseBody.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
 
-        foreach (string part in parts)
-        {
-            Console.WriteLine("Sekce " + (Array.IndexOf(parts, part) + 1));
-            string[] linesOfPart = part.Split("\\n", StringSplitOptions.RemoveEmptyEntries);
-            foreach (string line in linesOfPart)
+            string responseBody = webRequest.downloadHandler.data.ToString();
+            Debug.Log(responseBody);
+            responseBody = Regex.Replace(responseBody, @"\s+", " ");
+            string[] splitters = { "*******************************************************************************", "*******************************************" };
+            string[] parts = responseBody.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+            /*
+            foreach (string part in parts)
             {
-                Console.WriteLine(line);
-            }
-            Console.WriteLine();
+                //Debug.Log("Sekce " + (Array.IndexOf(parts, part) + 1));
+                string[] linesOfPart = part.Split("\\n", StringSplitOptions.RemoveEmptyEntries);
+                foreach (string line in linesOfPart)
+                {
+                    Debug.Log(line);
+                }
+            }*/
+
+            //NÃJAK VRAç TEN STRING!!!
         }
     }
+    
 
     static List<int> GetIDsObjektu()
     {
@@ -109,14 +110,7 @@ public class DataManager : MonoBehaviour
         veci.AddRange(dodatky);
         return veci;
     }
-
-    static async Task Main(string[] args)
-    {
-        List<int> objekty = GetIDObjektu();
-
-        Console.WriteLine(objekty.Count);
-    }
-    */
+    
     public void MakeOutputFile() 
     {
 
