@@ -21,10 +21,12 @@ public class DataManager : MonoBehaviour
     
     async Task StartAsync()
     {
-        //List<int> objekty = GetIDsObjektu();
+        List<int> objekty = GetIDsObjektu();
+
+        /*
         List<int> objekty = new List<int>();
         objekty.Add(10);
-        objekty.Add(199);
+        objekty.Add(199);*/
 
         //int i = 0;
         foreach (int objektID in objekty)
@@ -106,7 +108,7 @@ public class DataManager : MonoBehaviour
             veci.Add(i);
         }
 
-        int[] dodatky = { 65067 + 65070 + 65077 + 65079 + 65081 + 65082 };
+        int[] dodatky = { 65067, 65070, 65077, 65079, 65081, 65082 };
         veci.AddRange(dodatky);
         return veci;
     }
@@ -117,11 +119,6 @@ public class DataManager : MonoBehaviour
     }
 
     public void LoadFromFile() 
-    {
-
-    }
-
-    public void LoadFromHorizons() 
     {
 
     }
