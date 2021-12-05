@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class SpaceObject : MonoBehaviour
 {
-    public float weight;
+    //SpaceObject je tøída, kterou má každý vesmírný objekt ovlivnìn gravitací
+
+    public float mass;
     public List<Vector3> vsechnaSilovaPusobeni;
 
     public Vector3 smerRychlostiObjektu;
     public float velikostRychlostiObjektu;
 
-    public Vector3 rychlost; //UnityJednotka za 1s
+    public Vector3 rychlost; //zatím udávána jako: UnityJednotka za 1s
 
     public override string ToString()
     {
-        return name + " " + weight;
+        return name + " " + mass;
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         vsechnaSilovaPusobeni = new List<Vector3>();
-        //smerRychlostiObjektu = smerRychlostiObjektu.normalized;
         rychlost = new Vector3(0,0,0);
 
 
@@ -29,97 +29,69 @@ public class SpaceObject : MonoBehaviour
 
     public void OperaceObjektu()
     {
+        //Metoda popisující pohybové pùsobení objektu 
         Vector3 celkovaGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
-        //ToDo: dát pravou hodnotu do objectBaseVelocity 
-        Vector3 vlastni = smerRychlostiObjektu.normalized * velikostRychlostiObjektu;
+        Vector3 vlastniRychlost = smerRychlostiObjektu.normalized * velikostRychlostiObjektu;
+
+
         rychlost += celkovaGravitaceZrychleni;
 
-        if (this.name != "Sun")
-        {
-            MoveBy(rychlost, vlastni);
-        }
-        //rychlost = new Vector3(0, 0, 0);
-
-        if (this.name == "Mercury")
-        {
-            //Debug.Log(celkovaGravitaceZrychleni.magnitude);
-            Debug.Log(celkovaGravitaceZrychleni.magnitude);
-            if (this.transform.position == new Vector3(12.75359f, 19.04679f, 1.010269f))
-            {
-                Debug.LogWarning("Same position!");
-            }
-        }
+        
+        MoveBy(rychlost, vlastniRychlost);
     }
 
-    void MoveBy(Vector3 celkGravitace, Vector3 vlastni) 
+    void MoveBy(Vector3 celkGravitace, Vector3 vlastniRychlost) 
     {
-        Vector3 vysledniceSil = celkGravitace + vlastni;
+        //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
+        Vector3 vysledniceSil = celkGravitace + vlastniRychlost;
 
-        //Debug.LogWarning(vysledniceSil);
-
-        //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
-        vysledniceSil /= 50;
-        //Vector3 novaPozice = new Vector3(this.transform.position.x + vysledniceSil.x, this.transform.position.y + vysledniceSil.y, this.transform.position.z + vysledniceSil.z);
-        //Vector3 novaPozice = this.transform.position + vysledniceSil;
+        //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek; //pøipraveno až bude tøeba škálovat dle vyšší, èi nižší frekvence
+        
+        vysledniceSil /= 50; //jelikož se síla vypoèítá za 1s musí být vydìlena 50 kvùli metodì FixedUpdate, která se volá 50x za s
+        
         this.transform.position += vysledniceSil;
 
-        //NicitelBlizkychObjektu(0.5f);
+        //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
+        NicitelBlizkychObjektu(0.000001f);
 
     }
 
     void NicitelBlizkychObjektu(float distance) 
     {
-
+        //Metoda znièí objekt na urèitou vzdálenost (vzdálenost v UnityJednotkách)
         foreach (SpaceObject sO in (SpaceObject[])Resources.FindObjectsOfTypeAll(typeof(SpaceObject)))
         {
             //if this != sO
             if (Mathf.Abs(sO.transform.position.magnitude - this.transform.position.magnitude) < distance && sO != this)
             {
-                if (sO.weight < this.weight)
+                if (sO.mass < this.mass)
                 {
-                    Destroy(sO);
+                    Destroy(sO.gameObject);
                 }
-                if (sO.weight > this.weight)
+                if (sO.mass > this.mass)
                 {
-                    Destroy(this);
+                    Destroy(this.gameObject);
                 }
-                if (sO.weight == this.weight)
+                if (sO.mass == this.mass)
                 {
-                    Destroy(sO);
-                    Destroy(this);
+                    Destroy(sO.gameObject);
+                    Destroy(this.gameObject);
                 }
             }
         }
     }
 
-    Vector3 UpravaSmeruOrbity(Vector3 smerOrbity, Vector3 celkoveGravitacniPusobeni) 
-    {
-        /*
-        Debug.Log(smerOrbity.x);
-        Debug.Log(smerOrbity.y);
-        Debug.Log(celkoveGravitacniPusobeni.x);
-        Debug.Log(celkoveGravitacniPusobeni.y);
-        */
-
-        Vector3 a = Vector3.Cross(smerOrbity, celkoveGravitacniPusobeni);
-        return a.normalized;
-    }
-
     Vector3 CelkoveSilovePusobeniGravitace(List<Vector3> vektoryIn)
     {
+        //Vypoèítá aktuální gravitaèní pùsobení - seète veškeré gravitaèní pùsobení do jednoho vektoru
         Vector3 vOut = new Vector3(0, 0, 0);
 
         foreach (Vector3 vIn in vektoryIn)
         {
             vOut += vIn;
         }
-        
-        if(vOut.magnitude > 0.5f) 
-        {
-            //vOut = vOut.normalized * 0.5f;
-            //Debug.LogWarning("pøekroèeno");
-        }
 
-        return vOut; //zde máme akceleraci nebo rychlost za 1s
+        return vOut; 
+        //Pozn.: zde již máme rychlost, protože tabulka je pro gravitaèní rychlost (kvùli dìlení hmotností)
     }
 }

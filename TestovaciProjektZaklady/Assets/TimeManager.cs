@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TimeManager : MonoBehaviour
 {
+    //TimeManager programu urèuje rychlost pohybu èasu - dùležité hlavnì pøi výpoètech gravitace
+
     public enum CasNasobek 
     {
         jedna = 1,
@@ -35,11 +37,6 @@ public class TimeManager : MonoBehaviour
     private void FixedUpdate()
     {
         //FixedUpdate se volá každých 20 milisekund
-
-        if (false) //pøidat podmínku - pokud bude zmìnìná hodnota v UI - zmìò ji i zde
-        {
-            //pøidat zmìnu èasového násobku
-        }
 
         int milisecondsToAdd = 20 * ((int)aktualniCasovyNasobek);
         

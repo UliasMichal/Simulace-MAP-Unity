@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class GravityManager : MonoBehaviour
 {
-    // Start is called at the start of simulation
-    void Start()
-    {
+    // GravityManager spravuje gravitaèní výpoèty 
 
-        
-    }
+    //Konstanty gravitace a vzdálenost mìøítka
+    public const float gravityConstant = 6.67E-11f;
+    public const float meritko = 1000000;
 
     void FixedUpdate()
     {
+        //FixedUpdate je metoda volaná fixním èasem - bude pøepracována na Update v rámci dalšího výstupu pro lepší výkon systému
+
         TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
         for (int i = 0; i < ((int)a); i++)
         {
@@ -33,22 +34,24 @@ public class GravityManager : MonoBehaviour
     void GravityOfAllObjects(SpaceObject[] objekty)
     {
         //Metoda vezme všechny vesmírné objekty a vytvoøí mezi nimi silová pùsobení
-
+        
+        //Vymaže aktuální gravitaèní pùsobení
         foreach (SpaceObject sO in objekty)
         {
             sO.vsechnaSilovaPusobeni.Clear();
         }
 
+        //Vypoèítá gravitaci mezi objekty a to pøiøadí k objektùm
         for (int i = 0; i < objekty.Length; i++)
         {
             for (int y = 0; y < objekty.Length; y++)
             {
-                if (i != y) //a zároveò jsem již tuto gravitaci nespoèetl!!! DODAT
+                if (i < y) 
                 {
                     Vector3[] silaMeziObjekty = GravityMethod(objekty[i], objekty[y]);
 
                     objekty[i].vsechnaSilovaPusobeni.Add(silaMeziObjekty[0]);
-                    //objekty[y].vsechnaSilovaPusobeni.Add(silaMeziObjekty / objekty[y].weight);
+                    objekty[y].vsechnaSilovaPusobeni.Add(silaMeziObjekty[1]);
                 }
             }
         }
@@ -56,26 +59,33 @@ public class GravityManager : MonoBehaviour
 
     Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
     {
+        //Metoda poèítající gravitaèní pùsobení mezi 2 objekty - vrací 2-prvkové pole 
+        //Z dùvodu velikosti je vektorová a nevektorová èást rozdìlena
 
-        const float gravityConstant = 6.67E-11f;
-
+        //Vektorová èást - normalizovaný vektor ukazující smìr mezi 2 objekty
         Vector3 distanceInVector = (sO2.transform.position - sO.transform.position).normalized;
-        float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * 1000000;
+        
+
+        float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
 
         //Debug.Log(distance / 1000000);
-        if(distance < 10000000) 
+        
+        if(distance < meritko * 10) 
         {
-            distance = 10000000;
+            distance = meritko * 10;
             Debug.LogWarning("NEBEZPEÈNÁ VZDÁLENOST");
         }
 
-        float gravityNonVectorPart = (gravityConstant * sO.weight * sO2.weight / distance / distance)/1000000;
+        //Nevekterová èást - pomocí Newtonova gravitaèního zákonu 
+        float gravityNonVectorPart = (gravityConstant * sO.mass * sO2.mass / distance / distance)/ meritko;
+
+        //Gravitaèní zrychlení upraveno dìlením hmotností pro lepší manipulaci (tato hmotnost by se stejnì dìlila pøi pøedávání síli)
+        Vector3 gravityVector0 = new Vector3(gravityNonVectorPart * distanceInVector.x / sO.mass, gravityNonVectorPart * distanceInVector.y / sO.mass, gravityNonVectorPart * distanceInVector.z / sO.mass);
+        Vector3 gravityVector1 = new Vector3(gravityNonVectorPart * distanceInVector.x / sO2.mass, gravityNonVectorPart * distanceInVector.y / sO2.mass, gravityNonVectorPart * distanceInVector.z / sO2.mass);
 
 
-        Vector3 gravityVector0 = new Vector3(gravityNonVectorPart * distanceInVector.x / sO.weight, gravityNonVectorPart * distanceInVector.y / sO.weight, gravityNonVectorPart * distanceInVector.z / sO.weight);
-        Vector3 gravityVector1 = new Vector3(gravityNonVectorPart * distanceInVector.x / sO2.weight, gravityNonVectorPart * distanceInVector.y / sO2.weight, gravityNonVectorPart * distanceInVector.z / sO2.weight);
-
-        Vector3[] gravityVectors = { gravityVector0, gravityVector1 * -1 };
+       //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
+       Vector3[] gravityVectors = { gravityVector0, gravityVector1 * -1 };
 
         return gravityVectors;
     }
