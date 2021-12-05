@@ -19,7 +19,7 @@ public class DataManager : MonoBehaviour
     }
 
     
-    async Task StartAsync()
+    async Task Start()
     {
         List<int> objekty = GetIDsObjektu();
 
