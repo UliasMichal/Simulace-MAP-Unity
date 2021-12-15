@@ -27,7 +27,7 @@ public class SpaceObject : MonoBehaviour
 
     }
 
-    public void OperaceObjektu()
+    public void OperaceObjektuOld()
     {
         //Metoda popisující pohybové pùsobení objektu 
         Vector3 celkovaGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
@@ -37,22 +37,53 @@ public class SpaceObject : MonoBehaviour
         rychlost += celkovaGravitaceZrychleni;
 
         
-        MoveBy(rychlost, vlastniRychlost);
+        MoveByOld(rychlost, vlastniRychlost);
     }
 
-    void MoveBy(Vector3 celkGravitace, Vector3 vlastniRychlost) 
+    void MoveByOld(Vector3 celkGravitace, Vector3 vlastniRychlost)
     {
         //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
         Vector3 vysledniceSil = celkGravitace + vlastniRychlost;
 
         //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek; //pøipraveno až bude tøeba škálovat dle vyšší, èi nižší frekvence
-        
+
         vysledniceSil /= 50; //jelikož se síla vypoèítá za 1s musí být vydìlena 50 kvùli metodì FixedUpdate, která se volá 50x za s
-        
+
         this.transform.position += vysledniceSil;
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
-        NicitelBlizkychObjektu(0.000001f);
+        //NicitelBlizkychObjektu(0.000001f);
+
+    }
+
+    public void OperaceObjektu()
+    {
+        //Metoda popisující pohybové pùsobení objektu 
+        Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
+        Vector3 vlastniRychlost = smerRychlostiObjektu * velikostRychlostiObjektu;
+
+        Debug.Log(rychlost.x);
+        //Debug.Log(vlastniRychlost.x);
+
+        //Debug.Log(celkoveGravitaceZrychleni.x);
+
+        rychlost += celkoveGravitaceZrychleni;
+
+
+        MoveBy(rychlost, vlastniRychlost);
+    }
+
+    void MoveBy(Vector3 celkGravitace, Vector3 vlastniRychlost)
+    {
+        //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
+        Vector3 vysledniceSil = celkGravitace + vlastniRychlost; //
+
+        //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek; //pøipraveno až bude tøeba škálovat dle vyšší, èi nižší frekvence
+
+        this.transform.position += (vysledniceSil / 50);
+
+        //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
+        //NicitelBlizkychObjektu(0.000001f);
 
     }
 

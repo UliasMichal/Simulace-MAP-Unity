@@ -21,12 +21,13 @@ public class DataManager : MonoBehaviour
     
     async Task Start()
     {
+        /*
         List<int> objekty = GetIDsObjektu();
 
-        /*
+        
         List<int> objekty = new List<int>();
         objekty.Add(10);
-        objekty.Add(199);*/
+        objekty.Add(199);
 
         //int i = 0;
         foreach (int objektID in objekty)
@@ -38,7 +39,7 @@ public class DataManager : MonoBehaviour
             System.Threading.Thread.Sleep(10000);
 
         }
-        
+        */
     }
 
     static async Task RequestNaApi(string urlToRequest)

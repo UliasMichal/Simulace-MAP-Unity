@@ -517,8 +517,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 3.3e+23
   vsechnaSilovaPusobeni: []
-  smerRychlostiObjektu: {x: 0.5, y: 0.5, z: 0}
-  velikostRychlostiObjektu: 0.2
+  smerRychlostiObjektu: {x: 0, y: 0, z: 0}
+  velikostRychlostiObjektu: 1
   rychlost: {x: 0, y: 0, z: 0}
 --- !u!135 &1435275444
 SphereCollider:
@@ -826,3 +826,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55a531c8483273a4183ad9aba6d4db4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  urlToRequest: https://ssd.jpl.nasa.gov/api/horizons.api?format=json&COMMAND=%27#OBJEKTTOREPLACE#%27&OBJ_DATA=%27YES%27&MAKE_EPHEM=%27YES%27&EPHEM_TYPE=%27VECTOR%27&CENTER=%27500@10%27&START_TIME=%272006-01-01%27&STOP_TIME=%272006-01-20%27&STEP_SIZE=%271%20d%27&QUANTITIES=%271,9,20,23,24,29%27

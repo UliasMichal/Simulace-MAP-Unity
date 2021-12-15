@@ -23,7 +23,7 @@ public class GravityManager : MonoBehaviour
             
             foreach (SpaceObject sO in objekty)
             {
-                if (sO.vsechnaSilovaPusobeni.Count != 0)
+                if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
                 {
                     sO.OperaceObjektu();
                 }
@@ -57,7 +57,7 @@ public class GravityManager : MonoBehaviour
         }
     }
 
-    Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
+    Vector3[] GravityMethodOld(SpaceObject sO, SpaceObject sO2)
     {
         //Metoda poèítající gravitaèní pùsobení mezi 2 objekty - vrací 2-prvkové pole 
         //Z dùvodu velikosti je vektorová a nevektorová èást rozdìlena
@@ -86,6 +86,39 @@ public class GravityManager : MonoBehaviour
 
        //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
        Vector3[] gravityVectors = { gravityVector0, gravityVector1 * -1 };
+
+        return gravityVectors;
+    }
+
+    Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
+    {
+        //Upravená verze GravityMethod - dle doporuèení konzultanta
+        
+        float rx = (sO2.transform.position.x - sO.transform.position.x) * meritko;
+        float ry = (sO2.transform.position.y - sO.transform.position.y) * meritko;
+        float rz = (sO2.transform.position.y - sO.transform.position.z) * meritko;
+        
+
+
+        float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
+
+        //Debug.Log(distance);
+
+
+        float axMassObou = ((gravityConstant * rx * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
+        float ayMassObou = ((gravityConstant * ry * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
+        float azMassObou = ((gravityConstant * rz * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
+
+
+
+        //Gravitaèní zrychlení upraveno dìlením hmotností pro lepší manipulaci (tato hmotnost by se stejnì dìlila pøi pøedávání síli)
+        Vector3 gravityVector1 = new Vector3(axMassObou / sO.mass, ayMassObou / sO.mass, azMassObou / sO.mass) / meritko / 50;
+        Vector3 gravityVector2 = new Vector3(axMassObou / sO2.mass, ayMassObou / sO2.mass, azMassObou / sO2.mass) / meritko / 50;
+
+
+
+        //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
+        Vector3[] gravityVectors = { gravityVector1/50, -1 * gravityVector2 /50};
 
         return gravityVectors;
     }
