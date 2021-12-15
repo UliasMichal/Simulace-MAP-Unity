@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Text;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ public class DataManager : MonoBehaviour
         saveFile3,
     }
 
-    
+
     async Task Start()
     {
         /*
@@ -62,6 +63,21 @@ public class DataManager : MonoBehaviour
             responseBody = Regex.Replace(responseBody, @"\s+", " ");
             string[] splitters = { "*******************************************************************************", "*******************************************" };
             string[] parts = responseBody.Split(splitters, StringSplitOptions.RemoveEmptyEntries);
+
+            int indexMass = parts[1].IndexOf("Mass");
+            int indexKonce = parts[1].IndexOf(' ', parts[1].IndexOf("= ", parts[1].IndexOf("Mass")) + 2);
+            StringBuilder sb = new StringBuilder();
+            for(indexMass = indexMass; indexMass < indexKonce; indexMass++) 
+            {
+                sb.Append(parts[1][indexMass]);
+            }
+
+            string[] separator = {"\\n"};
+
+
+            string mass = sb.ToString(); //hmotnost objektu - formát se liší dle tìlesa
+            string[] xyzPozice = parts[8].Split(separator, StringSplitOptions.RemoveEmptyEntries); //pozice X,Y,Z - poèet dle requestù
+
             /*
             foreach (string part in parts)
             {
