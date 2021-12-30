@@ -9,6 +9,7 @@ public class TimeManager : MonoBehaviour
 
     public enum CasNasobek 
     {
+        pauza = 0,
         jedna = 1,
         dva = 2,
         ctyri = 4,

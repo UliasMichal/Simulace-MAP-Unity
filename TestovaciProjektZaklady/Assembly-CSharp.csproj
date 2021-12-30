@@ -57,8 +57,8 @@
     <Compile Include="Assets\SpaceObject.cs" />
     <Compile Include="Assets\DataManager.cs" />
     <Compile Include="Assets\MoveCam.cs" />
-    <Compile Include="Assets\TimeManager.cs" />
     <Compile Include="Assets\GravityManager.cs" />
+    <Compile Include="Assets\TimeManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
