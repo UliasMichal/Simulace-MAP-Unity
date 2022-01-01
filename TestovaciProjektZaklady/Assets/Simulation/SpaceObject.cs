@@ -12,7 +12,8 @@ public class SpaceObject : MonoBehaviour
     public Vector3 smerRychlostiObjektu;
     public float velikostRychlostiObjektu;
 
-    public Vector3 rychlost; //zatím udávána jako: UnityJednotka za 1s
+    //udávány jako: UnityJednotka za 1s
+    public Vector3 rychlost; 
 
     public override string ToString()
     {
@@ -22,19 +23,16 @@ public class SpaceObject : MonoBehaviour
     void Start()
     {
         vsechnaSilovaPusobeni = new List<Vector3>();
-        rychlost = new Vector3(0,0,0);
-
-
+        rychlost = new Vector3(0, 0, 0);
     }
 
     public void OperaceObjektuOld()
     {
         //Metoda popisující pohybové pùsobení objektu 
-        Vector3 celkovaGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
+        Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
         Vector3 vlastniRychlost = smerRychlostiObjektu.normalized * velikostRychlostiObjektu;
 
-
-        rychlost += celkovaGravitaceZrychleni;
+        rychlost += celkoveGravitaceZrychleni;
 
         
         MoveByOld(rychlost, vlastniRychlost);

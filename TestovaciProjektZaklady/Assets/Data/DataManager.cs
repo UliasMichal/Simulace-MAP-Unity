@@ -230,9 +230,10 @@ public class DataManager : MonoBehaviour
         NeptunianSatalite14 = 814
     }
 
+    /*
     async Task Start()
     {
-        /*
+        
         List<int> objekty = GetIDsObjektu();
 
         
@@ -250,8 +251,9 @@ public class DataManager : MonoBehaviour
             System.Threading.Thread.Sleep(10000);
 
         }
-        */
+        
     }
+    */
 
     static async Task RequestNaApi(string urlToRequest)
     {
@@ -277,9 +279,9 @@ public class DataManager : MonoBehaviour
             int indexMass = parts[1].IndexOf("Mass");
             int indexKonce = parts[1].IndexOf(' ', parts[1].IndexOf("= ", parts[1].IndexOf("Mass")) + 2);
             StringBuilder sb = new StringBuilder();
-            for(indexMass = indexMass; indexMass < indexKonce; indexMass++) 
+            for(int i = indexMass; i < indexKonce; i++) 
             {
-                sb.Append(parts[1][indexMass]);
+                sb.Append(parts[1][i]);
             }
 
             string[] separator = {"\\n"};

@@ -53,12 +53,15 @@
     <UnityVersion>2020.3.18f1</UnityVersion>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Assets\MenuManager.cs" />
-    <Compile Include="Assets\SpaceObject.cs" />
-    <Compile Include="Assets\DataManager.cs" />
-    <Compile Include="Assets\MoveCam.cs" />
-    <Compile Include="Assets\GravityManager.cs" />
-    <Compile Include="Assets\TimeManager.cs" />
+    <Compile Include="Assets\Menu&amp;UI\MainMenu.cs" />
+    <Compile Include="Assets\Menu&amp;UI\MenuManager.cs" />
+    <Compile Include="Assets\Simulation\SpaceObject.cs" />
+    <Compile Include="Assets\Data\DataManager.cs" />
+    <Compile Include="Assets\Menu&amp;UI\MoveCam.cs" />
+    <Compile Include="Assets\Simulation\GravityManager.cs" />
+    <Compile Include="Assets\Simulation\TimeManager.cs" />
+    <Compile Include="Assets\Data\SpaceObjectData.cs" />
+    <Compile Include="Assets\Data\SimulationData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
