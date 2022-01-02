@@ -58,10 +58,11 @@
     <Compile Include="Assets\Simulation\SpaceObject.cs" />
     <Compile Include="Assets\Data\DataManager.cs" />
     <Compile Include="Assets\Menu&amp;UI\MoveCam.cs" />
-    <Compile Include="Assets\Simulation\GravityManager.cs" />
-    <Compile Include="Assets\Simulation\TimeManager.cs" />
     <Compile Include="Assets\Data\SpaceObjectData.cs" />
     <Compile Include="Assets\Data\SimulationData.cs" />
+    <Compile Include="Assets\Simulation\GravityManager.cs" />
+    <Compile Include="Assets\Simulation\TimeManager.cs" />
+    <Compile Include="Assets\Data\OptionData.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

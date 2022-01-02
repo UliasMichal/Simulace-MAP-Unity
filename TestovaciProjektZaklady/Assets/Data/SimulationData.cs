@@ -2,17 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimulationData : MonoBehaviour
+[System.Serializable]
+public class SimulationData
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public List<SpaceObjectData> Telesa;
+    public OptionData Options;
+    public float[] datumACasSimulace; //7 prvkù rok, mìsíc, ..., sekunda, milisekunda
 
-    // Update is called once per frame
-    void Update()
+    public SimulationData(GameObject souborTeles, TimeManager tmSimulace) 
     {
-        
+        foreach(SpaceObject sO in souborTeles.GetComponentsInChildren<SpaceObject>(true)) 
+        {
+            Telesa.Add(new SpaceObjectData(sO));
+        }
+
+        datumACasSimulace = new float[7];
+        datumACasSimulace[0] = tmSimulace.casSimulace.Year;
+        datumACasSimulace[1] = tmSimulace.casSimulace.Month;
+        datumACasSimulace[2] = tmSimulace.casSimulace.Day;
+        datumACasSimulace[3] = tmSimulace.casSimulace.Hour;
+        datumACasSimulace[4] = tmSimulace.casSimulace.Minute;
+        datumACasSimulace[5] = tmSimulace.casSimulace.Second;
+        datumACasSimulace[6] = tmSimulace.casSimulace.Millisecond;
     }
 }

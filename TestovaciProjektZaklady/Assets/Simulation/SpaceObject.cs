@@ -14,6 +14,9 @@ public class SpaceObject : MonoBehaviour
     //udávány jako: UnityJednotka za 1s
     public Vector3 rychlost;
 
+    public bool zobrazitSilocary;
+    public bool zobrazitDrahy;
+
     public bool isProbe;
 
     public override string ToString()
@@ -29,7 +32,7 @@ public class SpaceObject : MonoBehaviour
         vsechnaSilovaPusobeni = new List<Vector3>();
         rychlost = new Vector3(0, 0, 0);
 
-        Color c = new Color(1, 1, 0);
+        Color c = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
         this.GetComponent<Renderer>().material.color = c;
     }
 
@@ -45,6 +48,10 @@ public class SpaceObject : MonoBehaviour
     {
         this.name = dataToLoad.name;
         mass = dataToLoad.mass;
+
+        zobrazitSilocary = dataToLoad.zobrazitSilocary;
+        zobrazitDrahy = dataToLoad.zobrazitDrahy;
+
         isProbe = dataToLoad.isProbe;
 
         //Obarví objekt dle uložených RGB hodnot

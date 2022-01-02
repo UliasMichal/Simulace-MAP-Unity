@@ -13,6 +13,9 @@ public class SpaceObjectData
     public float[] baseSpeed;
     public float[] currentSpeed;
 
+    public bool zobrazitSilocary;
+    public bool zobrazitDrahy;
+
     public bool isProbe;
 
     public SpaceObjectData(SpaceObject sO) 
@@ -40,6 +43,9 @@ public class SpaceObjectData
         baseSpeed[0] = sO.zakladniRychlostObjektu.x;
         baseSpeed[1] = sO.zakladniRychlostObjektu.y;
         baseSpeed[2] = sO.zakladniRychlostObjektu.z;
+
+        zobrazitSilocary = sO.zobrazitSilocary;
+        zobrazitDrahy = sO.zobrazitDrahy;
 
         isProbe = sO.isProbe;
     }

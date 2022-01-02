@@ -2,11 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TimeManager : MonoBehaviour
 {
     //TimeManager programu urèuje rychlost pohybu èasu - dùležité hlavnì pøi výpoètech gravitace
 
+    public GameObject timeUI;
+        
     public enum CasNasobek 
     {
         pauza = 0,
@@ -30,19 +33,25 @@ public class TimeManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        AktualizovatCas();
+    }
+
+    public void AktualizovatCas() 
+    {
         casSimulace = DateTime.Now;
-        //aktualniCasovyNasobek = CasNasobek.jedna;
     }
 
     // Update is called once per frame
     private void FixedUpdate()
     {
         //FixedUpdate se volá každých 20 milisekund
-
         int milisecondsToAdd = 20 * ((int)aktualniCasovyNasobek);
         
         casSimulace += new TimeSpan(0,0,0,0, milisecondsToAdd);
-        //Debug.Log(casSimulace);
+        
+        //Propíše èas do UI
+        timeUI.transform.GetChild(0).GetComponent<Text>().text = casSimulace.Date.ToString("dd:MM:yyyy"); //0 = datum
+        timeUI.transform.GetChild(1).GetComponent<Text>().text = casSimulace.TimeOfDay.ToString(@"hh\:mm\:ss"); //1 = èas
     }
 
 }
