@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-//using Newtonsoft.json;
 
 public class MenuManager : MonoBehaviour
 {
@@ -123,10 +120,8 @@ public class MenuManager : MonoBehaviour
         string path = Application.persistentDataPath + "/LoadFile" + fileNumber.ToString() + ".slf";
 
         SimulationData dataToSave = new SimulationData(ObjektySimulace, TimeManager.GetComponent<TimeManager>());
-        //string json = JsonUtility.ToJson(dataToSave);
-        /*
-        string json = JsonConvert.SerializeObject(account, Formatting.Indented);
-
+        string json = JsonUtility.ToJson(dataToSave, true);
+        //JsonUtility.FromJson(json, SimulationData);
 
         StreamWriter sw = new StreamWriter(path);
 
@@ -134,6 +129,6 @@ public class MenuManager : MonoBehaviour
 
         Debug.Log(path);
         sw.Close();
-        */
+        
     }
 }
