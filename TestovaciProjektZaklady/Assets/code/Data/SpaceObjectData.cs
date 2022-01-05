@@ -9,6 +9,8 @@ public class SpaceObjectData
     public float mass;
     public float[] colour;
 
+    public float[] scale;
+
     public float[] position;
     public float[] baseSpeed;
     public float[] currentSpeed;
@@ -18,6 +20,10 @@ public class SpaceObjectData
 
     public bool isProbe;
 
+    public override string ToString()
+    {
+        return name + ": " + position[0] + " " + position[1] + " " + position[2];
+    }
     public SpaceObjectData(SpaceObject sO) 
     {
         name = sO.name;
@@ -28,6 +34,11 @@ public class SpaceObjectData
         colour[0] = c.r;
         colour[1] = c.g;
         colour[2] = c.b;
+
+        scale = new float[3];
+        scale[0] = sO.transform.localScale.x;
+        scale[1] = sO.transform.localScale.y;
+        scale[2] = sO.transform.localScale.z;
 
         position = new float[3];
         position[0] = sO.transform.position.x;

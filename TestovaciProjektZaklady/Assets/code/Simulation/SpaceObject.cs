@@ -24,18 +24,6 @@ public class SpaceObject : MonoBehaviour
         return name + " " + mass;
     }
 
-    
-    void Start()
-    {
-        // Bude smazáno - debug only
-        
-        vsechnaSilovaPusobeni = new List<Vector3>();
-        rychlost = new Vector3(0, 0, 0);
-
-        Color c = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
-        this.GetComponent<Renderer>().material.color = c;
-    }
-
     #region DataRegion
     // Získávání dat a generace dat pro naèítání/ukládání
 
@@ -73,13 +61,9 @@ public class SpaceObject : MonoBehaviour
         //Metoda popisující pohybové pùsobení objektu 
         Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
 
-        //Debug.Log(rychlost.x);
-        //Debug.Log(vlastniRychlost.x);
-
-        //Debug.Log(celkoveGravitaceZrychleni.x);
-
         rychlost += celkoveGravitaceZrychleni;
 
+        //Debug.LogWarning(rychlost);
 
         MoveBy(rychlost, zakladniRychlostObjektu);
     }

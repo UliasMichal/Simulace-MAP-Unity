@@ -10,22 +10,82 @@ public class GravityManager : MonoBehaviour
     public const float gravityConstant = 6.67E-11f;
     public const float meritko = 1000000;
 
+    bool canSimulate = false;
+
+    void Start()
+    {
+        if (TransferSimulationDataBetweenScenes.HasDataToTransfer)
+        {
+            List<SpaceObjectData> sodList = TransferSimulationDataBetweenScenes.DataToTransfer.Telesa;
+
+            foreach (Transform child in this.transform)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (SpaceObjectData sod in sodList)
+            {
+                GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+                newObject.transform.parent = this.transform;
+
+                newObject.AddComponent<SpaceObject>();
+                AddSpaceObject(newObject, sod);
+
+                Debug.Log(newObject.name);
+                Debug.Log(newObject.transform.position.x);
+                Debug.Log(newObject.transform.position.y);
+                Debug.Log(newObject.transform.position.z);
+            }
+        }
+        canSimulate = true;
+    }
+
+    void AddSpaceObject(GameObject toAdd, SpaceObjectData sod) 
+    {
+        toAdd.name = sod.name;
+        toAdd.transform.position = FloatArrToVector3(sod.position);
+        toAdd.transform.localScale = FloatArrToVector3(sod.scale);
+
+        toAdd.GetComponent<Renderer>().material.color = new Color(sod.colour[0], sod.colour[1], sod.colour[2]);
+        toAdd.GetComponent<SpaceObject>().mass = sod.mass;
+        toAdd.GetComponent<SpaceObject>().rychlost = FloatArrToVector3(sod.currentSpeed);
+        toAdd.GetComponent<SpaceObject>().zakladniRychlostObjektu = FloatArrToVector3(sod.baseSpeed);
+        toAdd.GetComponent<SpaceObject>().zobrazitSilocary = sod.zobrazitSilocary;
+        toAdd.GetComponent<SpaceObject>().zobrazitDrahy = sod.zobrazitDrahy;
+        toAdd.GetComponent<SpaceObject>().isProbe = sod.isProbe;
+
+        toAdd.GetComponent<SpaceObject>().vsechnaSilovaPusobeni = new List<Vector3>();
+    }
+
+    Vector3 FloatArrToVector3(float[] vectorSaved) 
+    {
+        if(vectorSaved.Length != 3) 
+        {
+            Debug.LogError("VECTOR LOADED IN INVALID FORMAT - it needs to be 3 float array");
+        }
+        return new Vector3(vectorSaved[0], vectorSaved[1], vectorSaved[2]);
+    }
+
     void FixedUpdate()
     {
         //FixedUpdate je metoda volaná fixním èasem - bude pøepracována na Update v rámci dalšího výstupu pro lepší výkon systému
-
-        TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
-        for (int i = 0; i < ((int)a); i++)
+        if (canSimulate)
         {
-            //Debug.LogWarning(i);
-            SpaceObject[] objekty = (SpaceObject[])Resources.FindObjectsOfTypeAll(typeof(SpaceObject));
-            GravityOfAllObjects(objekty);
-            
-            foreach (SpaceObject sO in objekty)
+            TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
+            for (int i = 0; i < ((int)a); i++)
             {
-                if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
+                SpaceObject[] objekty = this.GetComponentsInChildren<SpaceObject>();
+
+                GravityOfAllObjects(objekty);
+
+                foreach (SpaceObject sO in objekty)
                 {
-                    sO.OperaceObjektu();
+
+                    if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
+                    {
+                        sO.OperaceObjektu();
+                    }
                 }
             }
         }
@@ -57,43 +117,10 @@ public class GravityManager : MonoBehaviour
         }
     }
 
-    Vector3[] GravityMethodOld(SpaceObject sO, SpaceObject sO2)
-    {
-        //Metoda poèítající gravitaèní pùsobení mezi 2 objekty - vrací 2-prvkové pole 
-        //Z dùvodu velikosti je vektorová a nevektorová èást rozdìlena
-
-        //Vektorová èást - normalizovaný vektor ukazující smìr mezi 2 objekty
-        Vector3 distanceInVector = (sO2.transform.position - sO.transform.position).normalized;
-        
-
-        float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
-
-        //Debug.Log(distance / 1000000);
-        
-        if(distance < meritko * 10) 
-        {
-            distance = meritko * 10;
-            Debug.LogWarning("NEBEZPEÈNÁ VZDÁLENOST");
-        }
-
-        //Nevekterová èást - pomocí Newtonova gravitaèního zákonu 
-        float gravityNonVectorPart = (gravityConstant * sO.mass * sO2.mass / distance / distance)/ meritko;
-
-        //Gravitaèní zrychlení upraveno dìlením hmotností pro lepší manipulaci (tato hmotnost by se stejnì dìlila pøi pøedávání síli)
-        Vector3 gravityVector0 = new Vector3(gravityNonVectorPart * distanceInVector.x / sO.mass, gravityNonVectorPart * distanceInVector.y / sO.mass, gravityNonVectorPart * distanceInVector.z / sO.mass);
-        Vector3 gravityVector1 = new Vector3(gravityNonVectorPart * distanceInVector.x / sO2.mass, gravityNonVectorPart * distanceInVector.y / sO2.mass, gravityNonVectorPart * distanceInVector.z / sO2.mass);
-
-
-       //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
-       Vector3[] gravityVectors = { gravityVector0, gravityVector1 * -1 };
-
-        return gravityVectors;
-    }
-
     Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
     {
         //Upravená verze GravityMethod - dle doporuèení konzultanta
-        
+
         float rx = (sO2.transform.position.x - sO.transform.position.x) * meritko;
         float ry = (sO2.transform.position.y - sO.transform.position.y) * meritko;
         float rz = (sO2.transform.position.y - sO.transform.position.z) * meritko;
@@ -115,7 +142,7 @@ public class GravityManager : MonoBehaviour
         Vector3 gravityVector1 = new Vector3(axMassObou / sO.mass, ayMassObou / sO.mass, azMassObou / sO.mass) / meritko / 50;
         Vector3 gravityVector2 = new Vector3(axMassObou / sO2.mass, ayMassObou / sO2.mass, azMassObou / sO2.mass) / meritko / 50;
 
-
+        //Debug.Log(gravityVector2);
 
         //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
         Vector3[] gravityVectors = { gravityVector1/50, -1 * gravityVector2 /50};

@@ -6,7 +6,7 @@ using UnityEngine;
 public class SimulationData
 {
     public List<SpaceObjectData> Telesa;
-    public float[] datumACasSimulace; //7 prvkù rok, mìsíc, ..., sekunda, milisekunda
+    public int[] datumACasSimulace; //7 prvkù rok, mìsíc, ..., sekunda, milisekunda
 
     public SimulationData(GameObject souborTeles, TimeManager tmSimulace) 
     {
@@ -16,7 +16,7 @@ public class SimulationData
             Telesa.Add(new SpaceObjectData(sO));
         }
 
-        datumACasSimulace = new float[7];
+        datumACasSimulace = new int[7];
         datumACasSimulace[0] = tmSimulace.casSimulace.Year;
         datumACasSimulace[1] = tmSimulace.casSimulace.Month;
         datumACasSimulace[2] = tmSimulace.casSimulace.Day;
@@ -25,4 +25,10 @@ public class SimulationData
         datumACasSimulace[5] = tmSimulace.casSimulace.Second;
         datumACasSimulace[6] = tmSimulace.casSimulace.Millisecond;
     }
+}
+
+public static class TransferSimulationDataBetweenScenes 
+{
+    public static SimulationData DataToTransfer { get; set; }
+    public static bool HasDataToTransfer = false;
 }

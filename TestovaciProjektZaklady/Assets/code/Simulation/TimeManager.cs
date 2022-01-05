@@ -34,6 +34,14 @@ public class TimeManager : MonoBehaviour
     void Start()
     {
         AktualizovatCas();
+
+        if (TransferSimulationDataBetweenScenes.HasDataToTransfer)
+        {
+
+            int[] timeFromFile = TransferSimulationDataBetweenScenes.DataToTransfer.datumACasSimulace;
+
+            casSimulace = new DateTime(timeFromFile[0], timeFromFile[1], timeFromFile[2], timeFromFile[3], timeFromFile[4], timeFromFile[5], timeFromFile[6]);
+        }
     }
 
     public void AktualizovatCas() 

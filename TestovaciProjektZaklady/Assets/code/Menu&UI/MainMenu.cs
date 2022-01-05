@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,11 +13,14 @@ public class MainMenu : MonoBehaviour
     {
         //pøidat load by API
         Debug.Log("SUCCESS");
+        //Unsuccessful
     }
 
     public void StartByDefaultFile()
     {
-        Debug.Log("Default file");
+        string path = Application.persistentDataPath + "/LoadFile" + 1 + ".slf";
+
+        StartByFile(path);
     }
 
     public void LoadFileSelect()
@@ -45,6 +50,20 @@ public class MainMenu : MonoBehaviour
 
     void StartByFile(string pathToFile)
     {
-        //Metoda, která naète ze souboru
+        //JsonUtility.FromJson(json, SimulationData);
+
+        StreamReader sr = new StreamReader(pathToFile);
+
+        string json = sr.ReadToEnd();
+
+        SimulationData dataFromFile = JsonUtility.FromJson<SimulationData>(json);
+
+        sr.Close();
+
+        TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
+        TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
+
+
+        SceneManager.LoadScene(sceneName: "MainScene");
     }
 }
