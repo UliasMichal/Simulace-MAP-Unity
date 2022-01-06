@@ -9,8 +9,6 @@ public class SpaceObject : MonoBehaviour
     public float mass;
     public List<Vector3> vsechnaSilovaPusobeni;
 
-    public Vector3 zakladniRychlostObjektu;
-
     //udávány jako: UnityJednotka za 1s
     public Vector3 rychlost;
 
@@ -48,9 +46,6 @@ public class SpaceObject : MonoBehaviour
         //Nastaví pozici dle uložených souøadnic XYZ
         this.transform.position = new Vector3(dataToLoad.position[0], dataToLoad.position[1], dataToLoad.position[2]);
 
-        //Nastaví základní rychlost dle uložených souøadnic XYZ
-        this.rychlost = new Vector3(dataToLoad.baseSpeed[0], dataToLoad.baseSpeed[1], dataToLoad.baseSpeed[2]);
-
         //Nastaví aktuální rychlost dle uložených souøadnic XYZ
         this.rychlost  = new Vector3(dataToLoad.currentSpeed[0], dataToLoad.currentSpeed[1], dataToLoad.currentSpeed[2]);
     }
@@ -65,13 +60,13 @@ public class SpaceObject : MonoBehaviour
 
         //Debug.LogWarning(rychlost);
 
-        MoveBy(rychlost, zakladniRychlostObjektu);
+        MoveBy(rychlost);
     }
 
-    void MoveBy(Vector3 celkGravitace, Vector3 vlastniRychlost)
+    void MoveBy(Vector3 celkGravitace)
     {
         //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
-        Vector3 vysledniceSil = celkGravitace + vlastniRychlost; 
+        Vector3 vysledniceSil = celkGravitace; 
 
         //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek; //pøipraveno až bude tøeba škálovat dle vyšší, èi nižší frekvence
 

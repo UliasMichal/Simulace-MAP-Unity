@@ -63,6 +63,8 @@ public class MainMenu : MonoBehaviour
         TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
         TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
 
+        //C:\Users\Michal\AppData\LocalLow\DefaultCompany\TestovaciProjektZaklady\soubor.slf
+        //Debug.Log(pathToFile);
 
         SceneManager.LoadScene(sceneName: "MainScene");
     }

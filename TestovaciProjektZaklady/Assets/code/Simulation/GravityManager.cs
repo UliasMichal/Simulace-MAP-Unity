@@ -11,6 +11,7 @@ public class GravityManager : MonoBehaviour
     public const float meritko = 1000000;
 
     bool canSimulate = false;
+    bool speedFromInput = true;
 
     void Start()
     {
@@ -27,15 +28,11 @@ public class GravityManager : MonoBehaviour
             {
                 GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 
+
                 newObject.transform.parent = this.transform;
 
                 newObject.AddComponent<SpaceObject>();
                 AddSpaceObject(newObject, sod);
-
-                Debug.Log(newObject.name);
-                Debug.Log(newObject.transform.position.x);
-                Debug.Log(newObject.transform.position.y);
-                Debug.Log(newObject.transform.position.z);
             }
         }
         canSimulate = true;
@@ -50,7 +47,6 @@ public class GravityManager : MonoBehaviour
         toAdd.GetComponent<Renderer>().material.color = new Color(sod.colour[0], sod.colour[1], sod.colour[2]);
         toAdd.GetComponent<SpaceObject>().mass = sod.mass;
         toAdd.GetComponent<SpaceObject>().rychlost = FloatArrToVector3(sod.currentSpeed);
-        toAdd.GetComponent<SpaceObject>().zakladniRychlostObjektu = FloatArrToVector3(sod.baseSpeed);
         toAdd.GetComponent<SpaceObject>().zobrazitSilocary = sod.zobrazitSilocary;
         toAdd.GetComponent<SpaceObject>().zobrazitDrahy = sod.zobrazitDrahy;
         toAdd.GetComponent<SpaceObject>().isProbe = sod.isProbe;
@@ -77,16 +73,19 @@ public class GravityManager : MonoBehaviour
             {
                 SpaceObject[] objekty = this.GetComponentsInChildren<SpaceObject>();
 
-                GravityOfAllObjects(objekty);
+                if (!speedFromInput)
+                {
+                    GravityOfAllObjects(objekty);
+                }
 
                 foreach (SpaceObject sO in objekty)
                 {
-
                     if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
                     {
                         sO.OperaceObjektu();
                     }
                 }
+                speedFromInput = false;
             }
         }
     }

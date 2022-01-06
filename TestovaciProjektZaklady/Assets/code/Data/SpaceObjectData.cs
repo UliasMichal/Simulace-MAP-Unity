@@ -12,7 +12,6 @@ public class SpaceObjectData
     public float[] scale;
 
     public float[] position;
-    public float[] baseSpeed;
     public float[] currentSpeed;
 
     public bool zobrazitSilocary;
@@ -49,11 +48,6 @@ public class SpaceObjectData
         currentSpeed[0] = sO.rychlost.x;
         currentSpeed[1] = sO.rychlost.y;
         currentSpeed[2] = sO.rychlost.z;
-
-        baseSpeed = new float[3];
-        baseSpeed[0] = sO.zakladniRychlostObjektu.x;
-        baseSpeed[1] = sO.zakladniRychlostObjektu.y;
-        baseSpeed[2] = sO.zakladniRychlostObjektu.z;
 
         zobrazitSilocary = sO.zobrazitSilocary;
         zobrazitDrahy = sO.zobrazitDrahy;

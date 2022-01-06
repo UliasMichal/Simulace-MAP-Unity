@@ -129,6 +129,5 @@ public class MenuManager : MonoBehaviour
 
         Debug.Log(path);
         sw.Close();
-        
     }
 }
