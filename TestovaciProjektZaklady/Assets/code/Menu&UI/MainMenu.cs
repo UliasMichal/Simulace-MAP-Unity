@@ -3,22 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
     public GameObject startMenuObj;
     public GameObject fileLoadObj;
 
-    public void StartByApi()
-    {
-        //pøidat load by API
-        Debug.Log("SUCCESS");
-        //Unsuccessful
-    }
+    public GameObject popUpErrorObj;
+    public Text textOfPopUpPath;
 
     public void StartByDefaultFile()
     {
-        string path = Application.persistentDataPath + "/LoadFile" + 1 + ".slf";
+        string path = Application.dataPath + "/LoadFileDefault.slf";
 
         StartByFile(path);
     }
@@ -32,7 +29,9 @@ public class MainMenu : MonoBehaviour
 
     public void StartBySaveFile(int indexSouboru)
     {
-        Debug.Log("Save file");
+        string path = Application.persistentDataPath + "/LoadFile" + indexSouboru + ".slf";
+
+        StartByFile(path);
     }
 
     public void ExitApp() 
@@ -43,29 +42,41 @@ public class MainMenu : MonoBehaviour
 
     public void BackToStartMenu() 
     {
-        Debug.Log("Back");
         fileLoadObj.SetActive(false);
         startMenuObj.SetActive(true);
+    }
+    public void HidePopUp()
+    {
+        popUpErrorObj.SetActive(false);
     }
 
     void StartByFile(string pathToFile)
     {
         //JsonUtility.FromJson(json, SimulationData);
 
-        StreamReader sr = new StreamReader(pathToFile);
+        if (File.Exists(pathToFile))
+        {
 
-        string json = sr.ReadToEnd();
+            StreamReader sr = new StreamReader(pathToFile);
 
-        SimulationData dataFromFile = JsonUtility.FromJson<SimulationData>(json);
+            string json = sr.ReadToEnd();
 
-        sr.Close();
+            SimulationData dataFromFile = JsonUtility.FromJson<SimulationData>(json);
 
-        TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
-        TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
+            sr.Close();
 
-        //C:\Users\Michal\AppData\LocalLow\DefaultCompany\TestovaciProjektZaklady\soubor.slf
-        //Debug.Log(pathToFile);
+            TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
+            TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
 
-        SceneManager.LoadScene(sceneName: "MainScene");
+            //C:\Users\Michal\AppData\LocalLow\DefaultCompany\TestovaciProjektZaklady\soubor.slf
+            //Debug.Log(pathToFile);
+
+            SceneManager.LoadScene(sceneName: "MainScene");
+        }
+        else
+        {
+            popUpErrorObj.SetActive(true);
+            textOfPopUpPath.text = pathToFile;
+        }
     }
 }

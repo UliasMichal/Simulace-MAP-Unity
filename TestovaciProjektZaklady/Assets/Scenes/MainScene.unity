@@ -6548,6 +6548,7 @@ MonoBehaviour:
   TimeMenu: {fileID: 1098901686}
   PauseButton: {fileID: 2053508936}
   PlayButton: {fileID: 183609555}
+  CPSelect: {fileID: 1515523407}
   ControlPanelCamera: {fileID: 1420308897}
   ControlPanelObject: {fileID: 1683987772}
   ControlPanelProbe: {fileID: 700335439}
@@ -7752,8 +7753,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1292182429}
         m_TargetAssemblyTypeName: MenuManager, Assembly-CSharp
-        m_MethodName: ControlPanelChangeInt
-        m_Mode: 3
+        m_MethodName: ControlPanelChange
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

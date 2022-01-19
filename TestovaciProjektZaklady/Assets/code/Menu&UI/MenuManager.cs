@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
@@ -11,8 +12,9 @@ public class MenuManager : MonoBehaviour
     public GameObject TimeMenu;
     public GameObject PauseButton;
     public GameObject PlayButton;
-    
+
     //ControlPanel
+    public Dropdown CPSelect;
     public GameObject ControlPanelCamera;
     public GameObject ControlPanelObject;
     public GameObject ControlPanelProbe;
@@ -21,6 +23,7 @@ public class MenuManager : MonoBehaviour
     //Pop-ups
     public GameObject CloseWindow;
     public GameObject AsteroidMenu;
+
 
     public enum ControlPanelModes 
     {
@@ -60,10 +63,9 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void ControlPanelChangeInt(int cpm)
+    public void ControlPanelChange()
     {
-        //Z dùvodu Unity, parametr nemùže být enum
-        if (cpm == (int)ControlPanelModes.allHidden)
+        if (CPSelect.value == (int)ControlPanelModes.allHidden)
         {
             ControlPanelCamera.SetActive(false);
             ControlPanelObject.SetActive(false);
@@ -72,7 +74,7 @@ public class MenuManager : MonoBehaviour
 
             return;
         }
-        if (cpm == (int)ControlPanelModes.cameraCP)
+        if (CPSelect.value == (int)ControlPanelModes.cameraCP)
         {
             ControlPanelCamera.SetActive(true);
 
@@ -82,7 +84,7 @@ public class MenuManager : MonoBehaviour
 
             return;
         }
-        if (cpm == (int)ControlPanelModes.objectCP)
+        if (CPSelect.value == (int)ControlPanelModes.objectCP)
         {
             ControlPanelObject.SetActive(true);
 
@@ -92,7 +94,7 @@ public class MenuManager : MonoBehaviour
 
             return;
         }
-        if (cpm == (int)ControlPanelModes.probeCP)
+        if (CPSelect.value == (int)ControlPanelModes.probeCP)
         {
             ControlPanelProbe.SetActive(true);
 
@@ -102,7 +104,7 @@ public class MenuManager : MonoBehaviour
 
             return;
         }
-        if (cpm == (int)ControlPanelModes.optionsCP)
+        if (CPSelect.value == (int)ControlPanelModes.optionsCP)
         {
             ControlPanelOptions.SetActive(true);
 
