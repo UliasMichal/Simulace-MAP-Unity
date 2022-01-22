@@ -128,8 +128,7 @@ public class GravityManager : MonoBehaviour
 
         float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
 
-        //Debug.Log(distance);
-
+        
 
         float axMassObou = ((gravityConstant * rx * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
         float ayMassObou = ((gravityConstant * ry * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
@@ -144,7 +143,7 @@ public class GravityManager : MonoBehaviour
         //Debug.Log(gravityVector2);
 
         //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
-        Vector3[] gravityVectors = { gravityVector1/50, -1 * gravityVector2 /50};
+        Vector3[] gravityVectors = { gravityVector1, -1 * gravityVector2};
 
         return gravityVectors;
     }
