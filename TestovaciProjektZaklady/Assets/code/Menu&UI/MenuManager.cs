@@ -21,19 +21,49 @@ public class MenuManager : MonoBehaviour
     public GameObject ControlPanelOptions;
 
     //Pop-ups
-    public GameObject CloseWindow;
-    public GameObject AsteroidMenu;
+    public GameObject ClosePU;
+    public GameObject FilePU;
+    public GameObject ErrorPU;
+    //public GameObject AsteroidMenu;
 
 
     public enum ControlPanelModes 
     {
-        allHidden,
-        cameraCP,
-        objectCP,
-        probeCP,
-        optionsCP
+        allHidden = 0,
+        cameraCP = 1,
+        objectCP = 2,
+        probeCP = 3,
+        optionsCP = 4
     }
-        
+
+    public void CloseAllPopUps() 
+    {
+        ClosePU.SetActive(false);
+        FilePU.SetActive(false);
+        ErrorPU.SetActive(false);
+    }
+
+    public void OpenClosePU() 
+    {
+        SpeedPausePlay(true);
+        CloseAllPopUps();
+        ClosePU.SetActive(true);
+    }
+
+    public void OpenFilePU()
+    {
+        SpeedPausePlay(true);
+        CloseAllPopUps();
+        FilePU.SetActive(true);
+    }
+
+    public void OpenErrorPU(string errorText)
+    {
+        SpeedPausePlay(true);
+        CloseAllPopUps();
+        ErrorPU.transform.Find("PopUpText").GetComponent<Text>().text = errorText;
+        ErrorPU.SetActive(true);
+    }
 
     public void SpeedChange(bool zvysit)
     {
@@ -47,9 +77,9 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void SpeedPausePlay(bool isPause)
+    public void SpeedPausePlay(bool simulationToPause)
     {
-        if (isPause)
+        if (simulationToPause)
         {
             PlayButton.SetActive(true);
             Debug.Log("Simulation paused");
@@ -131,5 +161,12 @@ public class MenuManager : MonoBehaviour
 
         Debug.Log(path);
         sw.Close();
+        ExitApp();
+    }
+
+    public void ExitApp()
+    {
+        Debug.Log("Quit");
+        Application.Quit();
     }
 }
