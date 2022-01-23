@@ -9074,7 +9074,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mass: 3.3e+23
   vsechnaSilovaPusobeni: []
-  rychlost: {x: -0.000003933334, y: 0.00005058333, z: 0.000004491667}
+  rychlost: {x: -3.933334, y: 50.58333, z: 4.491667}
   zobrazitSilocary: 0
   zobrazitDrahy: 0
   isProbe: 0

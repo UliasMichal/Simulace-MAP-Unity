@@ -48,6 +48,7 @@ public class SpaceObject : MonoBehaviour
 
         //Nastaví aktuální rychlost dle uložených souøadnic XYZ
         this.rychlost  = new Vector3(dataToLoad.currentSpeed[0], dataToLoad.currentSpeed[1], dataToLoad.currentSpeed[2]);
+        Debug.LogWarning(rychlost);
     }
     #endregion
 
@@ -56,6 +57,12 @@ public class SpaceObject : MonoBehaviour
         //Metoda popisující pohybové pùsobení objektu 
         Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
 
+        if(this.name == "Mercury") 
+        {
+            Debug.Log("X: " + celkoveGravitaceZrychleni.x);
+            Debug.Log("Y: " + celkoveGravitaceZrychleni.y);
+            Debug.Log("Z: " + celkoveGravitaceZrychleni.z);
+        }
         rychlost += celkoveGravitaceZrychleni;
 
         //Debug.LogWarning(rychlost);
@@ -70,7 +77,7 @@ public class SpaceObject : MonoBehaviour
 
         //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek; //pøipraveno až bude tøeba škálovat dle vyšší, èi nižší frekvence
 
-        this.transform.position += (vysledniceSil / 50);
+        this.transform.position += (vysledniceSil / 10000);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
         //NicitelBlizkychObjektu(0.000001f);

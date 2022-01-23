@@ -116,7 +116,7 @@ public class GravityManager : MonoBehaviour
         }
     }
 
-    Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
+    Vector3[] GravityMethodBackup(SpaceObject sO, SpaceObject sO2)
     {
         //Upravená verze GravityMethod - dle doporuèení konzultanta
 
@@ -144,6 +144,29 @@ public class GravityManager : MonoBehaviour
 
         //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
         Vector3[] gravityVectors = { gravityVector1, -1 * gravityVector2};
+
+        return gravityVectors;
+    }
+
+    Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
+    {
+        //Upravená verze GravityMethod - dle doporuèení konzultanta
+
+        float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
+        Vector3 direction = Vector3.Normalize(sO2.transform.position - sO.transform.position);
+
+        float nonVectorPart = gravityConstant / distance / distance;
+
+
+
+        //Gravitaèní zrychlení upraveno dìlením hmotností pro lepší manipulaci (tato hmotnost by se stejnì dìlila pøi pøedávání síli)
+        Vector3 gravityVector1 = direction * nonVectorPart * sO2.mass / meritko;
+        Vector3 gravityVector2 = direction * nonVectorPart * sO.mass / meritko;
+
+        //Debug.Log(gravityVector2);
+
+        //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
+        Vector3[] gravityVectors = { gravityVector1, -1 * gravityVector2 };
 
         return gravityVectors;
     }
