@@ -115,55 +115,19 @@ public class GravityManager : MonoBehaviour
             }
         }
     }
-
-    Vector3[] GravityMethodBackup(SpaceObject sO, SpaceObject sO2)
-    {
-        //Upravená verze GravityMethod - dle doporuèení konzultanta
-
-        float rx = (sO2.transform.position.x - sO.transform.position.x) * meritko;
-        float ry = (sO2.transform.position.y - sO.transform.position.y) * meritko;
-        float rz = (sO2.transform.position.y - sO.transform.position.z) * meritko;
-        
-
-
-        float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
-
-        
-
-        float axMassObou = ((gravityConstant * rx * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
-        float ayMassObou = ((gravityConstant * ry * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
-        float azMassObou = ((gravityConstant * rz * sO.mass * sO2.mass) / Mathf.Pow(distance, 3));
-
-
-
-        //Gravitaèní zrychlení upraveno dìlením hmotností pro lepší manipulaci (tato hmotnost by se stejnì dìlila pøi pøedávání síli)
-        Vector3 gravityVector1 = new Vector3(axMassObou / sO.mass, ayMassObou / sO.mass, azMassObou / sO.mass) / meritko / 50;
-        Vector3 gravityVector2 = new Vector3(axMassObou / sO2.mass, ayMassObou / sO2.mass, azMassObou / sO2.mass) / meritko / 50;
-
-        //Debug.Log(gravityVector2);
-
-        //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
-        Vector3[] gravityVectors = { gravityVector1, -1 * gravityVector2};
-
-        return gravityVectors;
-    }
-
     Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
     {
-        //Upravená verze GravityMethod - dle doporuèení konzultanta
+        //Upravená verze GravityMethod
 
         float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
         Vector3 direction = Vector3.Normalize(sO2.transform.position - sO.transform.position);
 
         float nonVectorPart = gravityConstant / distance / distance;
 
-
-
         //Gravitaèní zrychlení upraveno dìlením hmotností pro lepší manipulaci (tato hmotnost by se stejnì dìlila pøi pøedávání síli)
         Vector3 gravityVector1 = direction * nonVectorPart * sO2.mass / meritko;
         Vector3 gravityVector2 = direction * nonVectorPart * sO.mass / meritko;
 
-        //Debug.Log(gravityVector2);
 
         //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
         Vector3[] gravityVectors = { gravityVector1, -1 * gravityVector2 };
