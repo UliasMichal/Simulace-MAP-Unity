@@ -18,6 +18,8 @@ public class SpaceObjectData
     public bool zobrazitDrahy;
 
     public bool isProbe;
+    //public bool noGravityEffect;
+    //public bool noMovement;
 
     public override string ToString()
     {

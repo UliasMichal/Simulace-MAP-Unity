@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
+using System;
 
 public class MenuManager : MonoBehaviour
 {
@@ -70,10 +71,12 @@ public class MenuManager : MonoBehaviour
         if (zvysit)
         {
             Debug.Log("Speed increased");
+            TimeManager.GetComponent<TimeManager>().ZmenaCasovehoNasobku(1);
         }
         else
         {
             Debug.Log("Speed decreased");
+            TimeManager.GetComponent<TimeManager>().ZmenaCasovehoNasobku(-1);
         }
     }
 
@@ -84,12 +87,14 @@ public class MenuManager : MonoBehaviour
             PlayButton.SetActive(true);
             Debug.Log("Simulation paused");
             PauseButton.SetActive(false);
+            TimeManager.GetComponent<TimeManager>().ZastavitCas();
         }
         else
         {
             PauseButton.SetActive(true);
             Debug.Log("Simulation resumed");
             PlayButton.SetActive(false);
+            TimeManager.GetComponent<TimeManager>().SpustitCas();
         }
     }
 

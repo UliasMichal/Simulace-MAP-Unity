@@ -23,12 +23,14 @@ public class TimeManager : MonoBehaviour
         stoDvacetOsm = 128,
         dvestePadesatSest = 256,
         denZaS = 86400,
-        tydenZaS = 604800
+        tydenZaS = 604800, //7 dní
+        mesicZaS = 2592000, //30 dní
+        rokZaS = 31557600 //368,25 dní
+
     }
 
     public DateTime casSimulace;
     public CasNasobek aktualniCasovyNasobek;
-
 
     // Start is called before the first frame update
     void Start()
@@ -62,4 +64,19 @@ public class TimeManager : MonoBehaviour
         timeUI.transform.GetChild(1).GetComponent<Text>().text = casSimulace.TimeOfDay.ToString(@"hh\:mm\:ss"); //1 = èas
     }
 
+    public void ZmenaCasovehoNasobku(int zmena)
+    {
+        CasNasobek[] Arr = (CasNasobek[])Enum.GetValues(aktualniCasovyNasobek.GetType());
+        int j = Array.IndexOf<CasNasobek>(Arr, aktualniCasovyNasobek) + zmena;
+        aktualniCasovyNasobek = (Arr.Length == j) ? Arr[0] : Arr[j];
+    }
+
+    public void ZastavitCas()
+    {
+        aktualniCasovyNasobek = CasNasobek.pauza;
+    }
+    public void SpustitCas()
+    {
+        aktualniCasovyNasobek = CasNasobek.jedna;
+    }
 }

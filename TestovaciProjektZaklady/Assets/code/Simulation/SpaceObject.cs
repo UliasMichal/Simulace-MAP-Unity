@@ -17,6 +17,9 @@ public class SpaceObject : MonoBehaviour
 
     public bool isProbe;
 
+    //public bool noGravityEffect = false;
+    //public bool noMovement = false;
+
     public override string ToString()
     {
         return name + " " + mass;
@@ -57,15 +60,7 @@ public class SpaceObject : MonoBehaviour
         //Metoda popisující pohybové pùsobení objektu 
         Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
 
-        if(this.name == "Mercury") 
-        {
-            Debug.Log("X: " + celkoveGravitaceZrychleni.x);
-            Debug.Log("Y: " + celkoveGravitaceZrychleni.y);
-            Debug.Log("Z: " + celkoveGravitaceZrychleni.z);
-        }
         rychlost += celkoveGravitaceZrychleni;
-
-        //Debug.LogWarning(rychlost);
 
         MoveBy(rychlost);
     }
@@ -73,11 +68,12 @@ public class SpaceObject : MonoBehaviour
     void MoveBy(Vector3 celkGravitace)
     {
         //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
-        Vector3 vysledniceSil = celkGravitace; 
+        Vector3 vysledniceSil = celkGravitace;
 
-        //TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek; //pøipraveno až bude tøeba škálovat dle vyšší, èi nižší frekvence
+        TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
 
-        this.transform.position += (vysledniceSil / 10000);
+
+        this.transform.position += (vysledniceSil / 10000 / 47500 * (float)a);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
         //NicitelBlizkychObjektu(0.000001f);
