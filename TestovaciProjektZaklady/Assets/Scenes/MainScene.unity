@@ -9039,8 +9039,8 @@ GameObject:
   - component: {fileID: 1435275446}
   - component: {fileID: 1435275445}
   - component: {fileID: 1435275444}
-  - component: {fileID: 1435275442}
   - component: {fileID: 1435275448}
+  - component: {fileID: 1435275442}
   m_Layer: 0
   m_Name: Mercury
   m_TagString: Untagged
@@ -9057,9 +9057,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 1435275441}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 24b389e4d6de1a949a2c36718955482b, type: 3}
+  m_Script: {fileID: 11500000, guid: 14b799a14e7c8064f8b9b27207efff5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mass: 3.285e+23
+  vsechnaSilovaPusobeni: []
+  rychlost: {x: -3.9317198, y: 50.56614, z: 4.4937267}
+  zobrazitSilocary: 0
+  zobrazitDrahy: 0
+  isProbe: 0
 --- !u!135 &1435275444
 SphereCollider:
   m_ObjectHideFlags: 0
