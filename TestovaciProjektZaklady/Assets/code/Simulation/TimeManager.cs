@@ -22,10 +22,8 @@ public class TimeManager : MonoBehaviour
         sedesatCtyri = 64,
         stoDvacetOsm = 128,
         dvestePadesatSest = 256,
-        denZaS = 86400,
-        tydenZaS = 604800, //7 dní
-        mesicZaS = 2592000, //30 dní
-        rokZaS = 31557600 //368,25 dní
+        denZaS = 86400
+        //tydenZaS = 604800 //již není pøesné - muselo by se to øešit pøes vícero výpoètù -> snížení kvality zobrazení 
 
     }
 

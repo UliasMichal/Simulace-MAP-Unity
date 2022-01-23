@@ -68,25 +68,21 @@ public class GravityManager : MonoBehaviour
         //FixedUpdate je metoda volaná fixním èasem - bude pøepracována na Update v rámci dalšího výstupu pro lepší výkon systému
         if (canSimulate)
         {
-            TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
-            for (int i = 0; i < ((int)a); i++)
+            SpaceObject[] objekty = this.GetComponentsInChildren<SpaceObject>();
+
+            if (!speedFromInput)
             {
-                SpaceObject[] objekty = this.GetComponentsInChildren<SpaceObject>();
-
-                if (!speedFromInput)
-                {
-                    GravityOfAllObjects(objekty);
-                }
-
-                foreach (SpaceObject sO in objekty)
-                {
-                    if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
-                    {
-                        sO.OperaceObjektu();
-                    }
-                }
-                speedFromInput = false;
+                GravityOfAllObjects(objekty);
             }
+
+            foreach (SpaceObject sO in objekty)
+            {
+                if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
+                {
+                    sO.OperaceObjektu();
+                }
+            }
+            speedFromInput = false;
         }
     }
 

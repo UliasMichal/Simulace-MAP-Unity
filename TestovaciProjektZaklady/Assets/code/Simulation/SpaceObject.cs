@@ -72,7 +72,7 @@ public class SpaceObject : MonoBehaviour
 
         TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
 
-
+        Debug.Log((float)a);
         this.transform.position += (vysledniceSil / 10000 / 47500 * (float)a);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
