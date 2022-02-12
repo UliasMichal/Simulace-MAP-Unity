@@ -10,79 +10,71 @@ public class GravityManager : MonoBehaviour
     public const float gravityConstant = 6.67E-11f;
     public const float meritko = 1000000;
 
-    bool canSimulate = false;
-    bool speedFromInput = true;
+    bool canSimulate = true;
 
-    void Start()
+    void LoadSimulationFromData() 
     {
-        if (TransferSimulationDataBetweenScenes.HasDataToTransfer)
+        TransferSimulationDataBetweenScenes.HasDataToTransfer = false;
+        List<SpaceObjectData> sodList = TransferSimulationDataBetweenScenes.DataToTransfer.Telesa;
+
+        foreach (Transform child in this.transform)
         {
-            List<SpaceObjectData> sodList = TransferSimulationDataBetweenScenes.DataToTransfer.Telesa;
-
-            foreach (Transform child in this.transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-            foreach (SpaceObjectData sod in sodList)
-            {
-                GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-
-                newObject.transform.parent = this.transform;
-
-                newObject.AddComponent<SpaceObject>();
-                AddSpaceObject(newObject, sod);
-            }
+            Destroy(child.gameObject);
         }
-        canSimulate = true;
+
+        foreach (SpaceObjectData sod in sodList)
+        {
+            GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+            newObject.transform.parent = this.transform;
+
+            AddSpaceObject(newObject, sod);
+            AddTrailRenderer(newObject);
+        }
     }
 
-    void AddSpaceObject(GameObject toAdd, SpaceObjectData sod) 
+    void AddSpaceObject(GameObject toAdd, SpaceObjectData sod)
     {
-        toAdd.name = sod.name;
-        toAdd.transform.position = FloatArrToVector3(sod.position);
-        toAdd.transform.localScale = FloatArrToVector3(sod.scale);
+        toAdd.AddComponent<SpaceObject>();
 
-        toAdd.GetComponent<Renderer>().material.color = new Color(sod.colour[0], sod.colour[1], sod.colour[2]);
-        toAdd.GetComponent<SpaceObject>().mass = sod.mass;
-        toAdd.GetComponent<SpaceObject>().rychlost = FloatArrToVector3(sod.currentSpeed);
-        toAdd.GetComponent<SpaceObject>().zobrazitSilocary = sod.zobrazitSilocary;
-        toAdd.GetComponent<SpaceObject>().zobrazitDrahy = sod.zobrazitDrahy;
-        toAdd.GetComponent<SpaceObject>().isProbe = sod.isProbe;
+        toAdd.GetComponent<SpaceObject>().LoadFromData(sod);
 
         toAdd.GetComponent<SpaceObject>().vsechnaSilovaPusobeni = new List<Vector3>();
     }
 
-    Vector3 FloatArrToVector3(float[] vectorSaved) 
+    void AddTrailRenderer(GameObject toAdd) 
     {
-        if(vectorSaved.Length != 3) 
-        {
-            Debug.LogError("VECTOR LOADED IN INVALID FORMAT - it needs to be 3 float array");
-        }
-        return new Vector3(vectorSaved[0], vectorSaved[1], vectorSaved[2]);
+        toAdd.AddComponent<TrailRenderer>();
+        toAdd.GetComponent<TrailRenderer>().widthMultiplier = 0.5f;
+        toAdd.GetComponent<TrailRenderer>().time = float.PositiveInfinity;
+        toAdd.GetComponent<TrailRenderer>().enabled = true;
+        toAdd.GetComponent<TrailRenderer>().emitting = true;
     }
 
     void FixedUpdate()
     {
-        //FixedUpdate je metoda volaná fixním èasem - bude pøepracována na Update v rámci dalšího výstupu pro lepší výkon systému
-        if (canSimulate)
+        //FixedUpdate je metoda volaná fixním èasem 
+        if (TransferSimulationDataBetweenScenes.HasDataToTransfer)
+        {
+            LoadSimulationFromData();
+            return;
+        }
+
+        TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
+
+        if (canSimulate && a != TimeManager.CasNasobek.pauza)
         {
             SpaceObject[] objekty = this.GetComponentsInChildren<SpaceObject>();
 
-            if (!speedFromInput)
-            {
-                GravityOfAllObjects(objekty);
-            }
+            GravityOfAllObjects(objekty);
 
             foreach (SpaceObject sO in objekty)
             {
-                if (sO.vsechnaSilovaPusobeni.Count != 0 && sO.name != "Sun")
+                if (sO.vsechnaSilovaPusobeni.Count != 0)
                 {
                     sO.OperaceObjektu();
                 }
             }
-            speedFromInput = false;
         }
     }
 
@@ -114,6 +106,11 @@ public class GravityManager : MonoBehaviour
     Vector3[] GravityMethod(SpaceObject sO, SpaceObject sO2)
     {
         //Upravená verze GravityMethod
+        if (sO.noGravityEffect || sO2.noGravityEffect) 
+        {
+            Vector3[] zeroVectors = { new Vector3(0, 0, 0), new Vector3(0, 0, 0) };
+            return zeroVectors;
+        }
 
         float distance = Vector3.Distance(sO.transform.position, sO2.transform.position) * meritko;
         Vector3 direction = Vector3.Normalize(sO2.transform.position - sO.transform.position);
@@ -127,6 +124,12 @@ public class GravityManager : MonoBehaviour
 
         //Vektory jsou spojeny do 2 prvkového pole - jedno má opaèný smìr kvùli tomu, že se obì pøitahují k sobì
         Vector3[] gravityVectors = { gravityVector1, -1 * gravityVector2 };
+
+        if (float.IsNaN(gravityVectors[0].x)) 
+        {
+            Debug.Log(sO.name);
+            Debug.Log(sO2.name);
+        }
 
         return gravityVectors;
     }

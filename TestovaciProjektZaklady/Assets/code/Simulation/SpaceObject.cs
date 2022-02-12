@@ -17,8 +17,8 @@ public class SpaceObject : MonoBehaviour
 
     public bool isProbe;
 
-    //public bool noGravityEffect = false;
-    //public bool noMovement = false;
+    public bool noGravityEffect = false;
+    public bool noMovement = false;
 
     public override string ToString()
     {
@@ -43,15 +43,23 @@ public class SpaceObject : MonoBehaviour
 
         isProbe = dataToLoad.isProbe;
 
-        //Obarví objekt dle uložených RGB hodnot
-        this.GetComponent<Renderer>().material.color = new Color(dataToLoad.colour[0], dataToLoad.colour[1], dataToLoad.colour[2]); 
+        noGravityEffect = dataToLoad.noGravityEffect;
+        noMovement = dataToLoad.noMovement;
 
+        //Pøidá materiál typu planeta a obarví objekt dle uložených RGB hodnot
+        Material planetMat = Resources.Load<Material>("Materials/Planet");
+        Material[] matArr = { planetMat };
+
+        Color planetColor = new Color(dataToLoad.colour[0], dataToLoad.colour[1], dataToLoad.colour[2]);
+        this.GetComponent<MeshRenderer>().materials = matArr;
+
+        this.GetComponent<MeshRenderer>().materials[0].color = planetColor;
+        
         //Nastaví pozici dle uložených souøadnic XYZ
         this.transform.position = new Vector3(dataToLoad.position[0], dataToLoad.position[1], dataToLoad.position[2]);
 
         //Nastaví aktuální rychlost dle uložených souøadnic XYZ
         this.rychlost  = new Vector3(dataToLoad.currentSpeed[0], dataToLoad.currentSpeed[1], dataToLoad.currentSpeed[2]);
-        Debug.LogWarning(rychlost);
     }
     #endregion
 
@@ -60,9 +68,40 @@ public class SpaceObject : MonoBehaviour
         //Metoda popisující pohybové pùsobení objektu 
         Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
 
-        rychlost += celkoveGravitaceZrychleni;
+        if (!noMovement)
+        {
+            //Debug.Log(celkoveGravitaceZrychleni);
+            rychlost += celkoveGravitaceZrychleni;
+            MoveBy(rychlost); 
+        }
 
-        MoveBy(rychlost);
+        OvladaniTrailRendereru();
+    }
+
+    void OvladaniTrailRendereru() 
+    {
+        //Metoda umožòuje skrýt/odkrýt dráhu planety
+
+        if (zobrazitDrahy)
+        {
+            Material defaultLine = Resources.Load<Material>("Materials/Default-Line");
+            Color toChange = this.GetComponent<MeshRenderer>().materials[0].color;
+            toChange.a = 1;
+            Material[] matArr = { defaultLine };
+            this.GetComponent<TrailRenderer>().materials = matArr;
+            this.GetComponent<TrailRenderer>().materials[0] = defaultLine;
+            this.GetComponent<TrailRenderer>().material.SetColor("_TintColor", toChange);
+        }
+        else
+        {
+            Material invis = Resources.Load<Material>("Materials/Invis");
+            Material[] matArr = { invis };
+            this.GetComponent<TrailRenderer>().materials = matArr;
+            /*Color toChange = this.GetComponent<MeshRenderer>().materials[0].color;
+            toChange.a = 0;
+            this.GetComponent<TrailRenderer>().materials[0].color = toChange;*/
+        }
+        
     }
 
     void MoveBy(Vector3 celkGravitace)
@@ -72,8 +111,8 @@ public class SpaceObject : MonoBehaviour
 
         TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
 
-        Debug.Log((float)a);
-        this.transform.position += (vysledniceSil / 10000 / 47500 * (float)a);
+        //Debug.Log((float)a);
+        this.transform.position += (vysledniceSil / 100000 / 4750 * (float)a);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
         //NicitelBlizkychObjektu(0.000001f);
@@ -98,6 +137,7 @@ public class SpaceObject : MonoBehaviour
                 }
                 if (sO.mass == this.mass)
                 {
+                    // pøidat podmínku rychlosti?
                     Destroy(sO.gameObject);
                     Destroy(this.gameObject);
                 }

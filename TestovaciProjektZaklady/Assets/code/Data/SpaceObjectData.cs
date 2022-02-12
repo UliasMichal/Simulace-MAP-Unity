@@ -18,14 +18,19 @@ public class SpaceObjectData
     public bool zobrazitDrahy;
 
     public bool isProbe;
-    //public bool noGravityEffect;
-    //public bool noMovement;
+
+    public bool noGravityEffect;
+    public bool noMovement;
 
     public override string ToString()
     {
         return name + ": " + position[0] + " " + position[1] + " " + position[2];
     }
-    public SpaceObjectData(SpaceObject sO) 
+
+    public SpaceObjectData()
+    { }
+
+    public SpaceObjectData(SpaceObject sO)
     {
         name = sO.name;
         mass = sO.mass;
@@ -55,5 +60,8 @@ public class SpaceObjectData
         zobrazitDrahy = sO.zobrazitDrahy;
 
         isProbe = sO.isProbe;
+
+        noGravityEffect = sO.noGravityEffect;
+        noMovement = sO.noMovement; 
     }
 }

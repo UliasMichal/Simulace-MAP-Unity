@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class MainMenu : MonoBehaviour
 {
@@ -11,7 +12,17 @@ public class MainMenu : MonoBehaviour
     public GameObject fileLoadObj;
 
     public GameObject popUpErrorObj;
+
+    public Text textOfPopUpInfo;
     public Text textOfPopUpPath;
+
+    private void FixedUpdate()
+    {
+        if (Screen.width < 450 || Screen.height < 400)
+        {
+            Screen.SetResolution(450, 400, false);
+        }
+    }
 
     public void StartByDefaultFile()
     {
@@ -52,31 +63,59 @@ public class MainMenu : MonoBehaviour
 
     void StartByFile(string pathToFile)
     {
-        //JsonUtility.FromJson(json, SimulationData);
-
         if (File.Exists(pathToFile))
         {
+            using (StreamReader sr = new StreamReader(pathToFile))
+            {
+                string json = sr.ReadToEnd();
 
-            StreamReader sr = new StreamReader(pathToFile);
+                SimulationData dataFromFile;
+                TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
 
-            string json = sr.ReadToEnd();
+                if (!json.Contains("\"Telesa\""))
+                {
+                    string errorMessageJSON = "Soubor nemá validní JSON strukturu: ";
+                    textOfPopUpInfo.text = errorMessageJSON;
+                    textOfPopUpPath.text = pathToFile;
+                    popUpErrorObj.SetActive(true);
+                    sr.Close();
+                    return;
+                }
 
-            SimulationData dataFromFile = JsonUtility.FromJson<SimulationData>(json);
+                try
+                {
+                    dataFromFile = JsonUtility.FromJson<SimulationData>(json);
+                }
 
-            sr.Close();
+                catch (Exception)
+                {
+                    Debug.Log("PROBLÉM");
+                    string errorMessageJSON = "Soubor nemá validní JSON strukturu: ";
+                    textOfPopUpInfo.text = errorMessageJSON;
+                    textOfPopUpPath.text = pathToFile;
+                    popUpErrorObj.SetActive(true);
+                    sr.Close();
+                    return;
+                }
 
-            TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
-            TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
+                sr.Close();
 
-            //C:\Users\Michal\AppData\LocalLow\DefaultCompany\TestovaciProjektZaklady\soubor.slf
-            //Debug.Log(pathToFile);
+                Debug.Log(dataFromFile);
 
-            SceneManager.LoadScene(sceneName: "MainScene");
+                TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
+
+                //C:\Users\Michal\AppData\LocalLow\DefaultCompany\TestovaciProjektZaklady\soubor.slf
+                //Debug.Log(pathToFile);
+
+                SceneManager.LoadScene(sceneName: "MainScene");
+            }
         }
         else
         {
-            popUpErrorObj.SetActive(true);
+            string errorMessagePath = "Cesta k souboru není validní: ";
+            textOfPopUpInfo.text = errorMessagePath;
             textOfPopUpPath.text = pathToFile;
+            popUpErrorObj.SetActive(true);
         }
     }
 }

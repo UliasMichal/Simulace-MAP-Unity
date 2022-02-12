@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using UnityEngine.UI;
 using System;
+using System.Collections.Generic;
 
 public class MenuManager : MonoBehaviour
 {
@@ -25,8 +26,12 @@ public class MenuManager : MonoBehaviour
     public GameObject ClosePU;
     public GameObject FilePU;
     public GameObject ErrorPU;
-    //public GameObject AsteroidMenu;
+    public GameObject CreatePU;
+    public GameObject DeletePU;
+    public GameObject UpdatePU;
 
+    //Vlastnosti pop-upù
+    
 
     public enum ControlPanelModes 
     {
@@ -35,6 +40,13 @@ public class MenuManager : MonoBehaviour
         objectCP = 2,
         probeCP = 3,
         optionsCP = 4
+    }
+    private void FixedUpdate()
+    {
+        if (Screen.width < 450 || Screen.height < 400)
+        {
+            Screen.SetResolution(450, 400, false);
+        }
     }
 
     public void CloseAllPopUps() 
@@ -150,6 +162,41 @@ public class MenuManager : MonoBehaviour
             return;
         }
     }
+    public void CreateSpaceObject()
+    {
+        SpaceObjectData sod = GetDataFromMain();
+
+        GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+
+        newObject.transform.parent = this.transform;
+
+        AddSpaceObject(newObject, sod);
+        AddTrailRenderer(newObject);
+    }
+
+    SpaceObjectData GetDataFromMain()
+    {
+        SpaceObjectData sod = new SpaceObjectData();
+        return sod;
+    }
+
+    void AddSpaceObject(GameObject toAdd, SpaceObjectData sod)
+    {
+        toAdd.AddComponent<SpaceObject>();
+
+        toAdd.GetComponent<SpaceObject>().LoadFromData(sod);
+
+        toAdd.GetComponent<SpaceObject>().vsechnaSilovaPusobeni = new List<Vector3>();
+    }
+
+    void AddTrailRenderer(GameObject toAdd)
+    {
+        toAdd.AddComponent<TrailRenderer>();
+        toAdd.GetComponent<TrailRenderer>().widthMultiplier = 0.5f;
+        toAdd.GetComponent<TrailRenderer>().time = float.PositiveInfinity;
+        toAdd.GetComponent<TrailRenderer>().enabled = true;
+        toAdd.GetComponent<TrailRenderer>().emitting = true;
+    }
 
     public void SaveToFile(int fileNumber) 
     {
@@ -158,7 +205,6 @@ public class MenuManager : MonoBehaviour
 
         SimulationData dataToSave = new SimulationData(ObjektySimulace, TimeManager.GetComponent<TimeManager>());
         string json = JsonUtility.ToJson(dataToSave, true);
-        //JsonUtility.FromJson(json, SimulationData);
 
         StreamWriter sw = new StreamWriter(path);
 
