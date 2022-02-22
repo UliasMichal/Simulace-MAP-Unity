@@ -9,6 +9,7 @@ public class MenuManager : MonoBehaviour
     //Ovládací objekty
     public GameObject ObjektySimulace;
     public GameObject TimeManager;
+    public GameObject KameraASvetla;
 
     //Time
     public GameObject TimeMenu;
@@ -18,6 +19,12 @@ public class MenuManager : MonoBehaviour
     //ControlPanel
     public Dropdown CPSelect;
     public GameObject ControlPanelCamera;
+    public InputField PoziceX;
+    public InputField PoziceY;
+    public InputField PoziceZ;
+    public InputField RotaceX;
+    public InputField RotaceY;
+    public InputField RotaceZ;
     public GameObject ControlPanelObject;
     public GameObject ControlPanelProbe;
     public GameObject ControlPanelOptions;
@@ -47,6 +54,64 @@ public class MenuManager : MonoBehaviour
         {
             Screen.SetResolution(450, 400, false);
         }
+    }
+
+    public void SetPoziceKamery()
+    {
+        float xPos = ParserProOddelovace(PoziceX.text);
+        if (xPos == float.NaN) 
+        {
+            OpenErrorPU(xPos + " - není validní èíslo pro pozici");
+        }
+
+        float yPos = ParserProOddelovace(PoziceY.text);
+        if (yPos == float.NaN)
+        {
+            OpenErrorPU(yPos + " - není validní èíslo pro pozici");
+        }
+
+        float zPos = ParserProOddelovace(PoziceZ.text);
+        if (zPos == float.NaN)
+        {
+            OpenErrorPU(zPos + " - není validní èíslo pro pozici");
+        }
+
+        float xRot = ParserProOddelovace(RotaceX.text);
+        if (xRot == float.NaN)
+        {
+            OpenErrorPU(xRot + " - není validní èíslo pro rotaci");
+        }
+
+        float yRot = ParserProOddelovace(RotaceY.text);
+        if (yRot == float.NaN)
+        {
+            OpenErrorPU(yRot + " - není validní èíslo pro rotaci");
+        }
+
+        float zRot = ParserProOddelovace(RotaceZ.text);
+        if (zRot == float.NaN)
+        {
+            OpenErrorPU(zRot + " - není validní èíslo pro rotaci");
+        }
+
+        KameraASvetla.transform.position = new Vector3(xPos, yPos, zPos);
+
+        Quaternion qRotace = new Quaternion();
+        qRotace.eulerAngles = new Vector3(xRot, yRot, zRot);
+        KameraASvetla.transform.rotation = qRotace;
+    }
+
+    private float ParserProOddelovace(string input) 
+    {
+        if(float.TryParse(input.Replace(',', '.'), out float teckaVal)) 
+        {
+            return teckaVal;
+        }
+        if (float.TryParse(input.Replace(',', '.'), out float carkaVal)) 
+        {
+            return carkaVal;
+        }
+        return float.NaN;
     }
 
     public void CloseAllPopUps() 

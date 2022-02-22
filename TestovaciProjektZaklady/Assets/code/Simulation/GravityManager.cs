@@ -12,51 +12,14 @@ public class GravityManager : MonoBehaviour
 
     bool canSimulate = true;
 
-    void LoadSimulationFromData() 
-    {
-        TransferSimulationDataBetweenScenes.HasDataToTransfer = false;
-        List<SpaceObjectData> sodList = TransferSimulationDataBetweenScenes.DataToTransfer.Telesa;
-
-        foreach (Transform child in this.transform)
-        {
-            Destroy(child.gameObject);
-        }
-
-        foreach (SpaceObjectData sod in sodList)
-        {
-            GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-            newObject.transform.parent = this.transform;
-
-            AddSpaceObject(newObject, sod);
-            AddTrailRenderer(newObject);
-        }
-    }
-
-    void AddSpaceObject(GameObject toAdd, SpaceObjectData sod)
-    {
-        toAdd.AddComponent<SpaceObject>();
-
-        toAdd.GetComponent<SpaceObject>().LoadFromData(sod);
-
-        toAdd.GetComponent<SpaceObject>().vsechnaSilovaPusobeni = new List<Vector3>();
-    }
-
-    void AddTrailRenderer(GameObject toAdd) 
-    {
-        toAdd.AddComponent<TrailRenderer>();
-        toAdd.GetComponent<TrailRenderer>().widthMultiplier = 0.5f;
-        toAdd.GetComponent<TrailRenderer>().time = float.PositiveInfinity;
-        toAdd.GetComponent<TrailRenderer>().enabled = true;
-        toAdd.GetComponent<TrailRenderer>().emitting = true;
-    }
+    
 
     void FixedUpdate()
     {
         //FixedUpdate je metoda volaná fixním èasem 
         if (TransferSimulationDataBetweenScenes.HasDataToTransfer)
         {
-            LoadSimulationFromData();
+            LoadSimulation.LoadSimulationFromData(this.gameObject);
             return;
         }
 

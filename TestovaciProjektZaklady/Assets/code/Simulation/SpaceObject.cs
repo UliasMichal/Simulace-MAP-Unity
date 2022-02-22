@@ -11,9 +11,11 @@ public class SpaceObject : MonoBehaviour
 
     //udávány jako: UnityJednotka za 1s
     public Vector3 rychlost;
+    public Vector3 aktualniSilovePusobeni;
 
     public bool zobrazitSilocary;
     public bool zobrazitDrahy;
+    public bool zobrazitPopisek = false;
 
     public bool isProbe;
 
@@ -66,16 +68,17 @@ public class SpaceObject : MonoBehaviour
     public void OperaceObjektu()
     {
         //Metoda popisující pohybové pùsobení objektu 
-        Vector3 celkoveGravitaceZrychleni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
+        aktualniSilovePusobeni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
 
         if (!noMovement)
         {
-            //Debug.Log(celkoveGravitaceZrychleni);
-            rychlost += celkoveGravitaceZrychleni;
+            rychlost += aktualniSilovePusobeni;
             MoveBy(rychlost); 
         }
 
         OvladaniTrailRendereru();
+        OvladaniPopisku();
+        OvladaniLineRendereru();
     }
 
     void OvladaniTrailRendereru() 
@@ -97,25 +100,90 @@ public class SpaceObject : MonoBehaviour
             Material invis = Resources.Load<Material>("Materials/Invis");
             Material[] matArr = { invis };
             this.GetComponent<TrailRenderer>().materials = matArr;
-            /*Color toChange = this.GetComponent<MeshRenderer>().materials[0].color;
-            toChange.a = 0;
-            this.GetComponent<TrailRenderer>().materials[0].color = toChange;*/
         }
         
     }
 
-    void MoveBy(Vector3 celkGravitace)
+    void OvladaniPopisku()
+    {
+        //Metoda umožòuje skrýt/odkrýt název planety
+        
+        TextMesh popisekObjektu = this.GetComponentInChildren<TextMesh>();
+        if (zobrazitPopisek) 
+        {
+            popisekObjektu.fontSize = (int)(GameObject.Find("CameraAndLights").transform.position.magnitude / 7);
+            popisekObjektu.transform.rotation = GameObject.Find("CameraAndLights").transform.rotation;
+            popisekObjektu.transform.position = this.transform.position;
+            popisekObjektu.text = this.name;
+        }
+        else 
+        {
+            popisekObjektu.text = "";
+        }
+    }
+
+    void OvladaniLineRendereru() 
+    {
+        //Metoda umožòuje skrýt/odkrýt silové pùsobení na planetu
+        Transform parentSilocar = GetChild("ParentSilocar", this.transform);
+        foreach (Transform child in parentSilocar)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        if (zobrazitSilocary) 
+        {
+            GameObject hlavniSilocara = TvorbaObjektuSilocary(this.transform.position, aktualniSilovePusobeni, this.transform.localScale);
+            hlavniSilocara.transform.SetParent(parentSilocar);
+            Debug.Log(vsechnaSilovaPusobeni[0].x);
+            foreach (Vector3 silocara in vsechnaSilovaPusobeni) 
+            {
+                GameObject go = TvorbaObjektuSilocary(this.transform.position, silocara, this.transform.localScale);
+                go.transform.SetParent(parentSilocar);
+            }
+        }
+    }
+
+    GameObject TvorbaObjektuSilocary(Vector3 poziceObjektu, Vector3 silocara, Vector3 scale) 
+    {
+        GameObject gameObjectToReturn = new GameObject();
+        LineRenderer createdLR = gameObjectToReturn.AddComponent<LineRenderer>();
+
+        Material defaultLine = Resources.Load<Material>("Materials/Default-Line");
+        Color toChange = this.GetComponent<MeshRenderer>().materials[0].color;
+        toChange.a = 1;
+
+        createdLR.material = defaultLine;
+        createdLR.material.SetColor("_TintColor", toChange);
+        createdLR.widthMultiplier = 0.05f;
+
+        createdLR.SetPosition(0, poziceObjektu);
+        createdLR.SetPosition(1, poziceObjektu + 200*silocara);
+
+        return gameObjectToReturn;
+    }
+
+    Transform GetChild(string childToFind, Transform hlavni) 
+    {
+        foreach(Transform t in hlavni) 
+        {
+            if(t.name == childToFind) 
+            {
+                return t;
+            }
+        }
+        throw new System.ArgumentNullException("ERROR: Child of a given parent has not been found!");
+    }
+
+    void MoveBy(Vector3 rychlostObjektu)
     {
         //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
-        Vector3 vysledniceSil = celkGravitace;
-
         TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
 
-        //Debug.Log((float)a);
-        this.transform.position += (vysledniceSil / 100000 / 4750 * (float)a);
+        this.transform.position += (rychlostObjektu / 100000 / 4750 * (float)a);
+        //this.transform.position += (rychlostObjektu / 100000 / 50 * (float)a);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
-        //NicitelBlizkychObjektu(0.000001f);
+        NicitelBlizkychObjektu(0.000001f);
 
     }
 

@@ -9,7 +9,11 @@ public class TimeManager : MonoBehaviour
     //TimeManager programu urèuje rychlost pohybu èasu - dùležité hlavnì pøi výpoètech gravitace
 
     public GameObject timeUI;
-        
+    public Text timeNasobekText;
+    public Button timeSpeedDown;
+    public Button timeSpeedUp;
+
+
     public enum CasNasobek 
     {
         pauza = 0,
@@ -60,13 +64,17 @@ public class TimeManager : MonoBehaviour
         //Propíše èas do UI
         timeUI.transform.GetChild(0).GetComponent<Text>().text = casSimulace.Date.ToString("dd:MM:yyyy"); //0 = datum
         timeUI.transform.GetChild(1).GetComponent<Text>().text = casSimulace.TimeOfDay.ToString(@"hh\:mm\:ss"); //1 = èas
+        timeNasobekText.text = ((int)aktualniCasovyNasobek).ToString();
     }
 
     public void ZmenaCasovehoNasobku(int zmena)
     {
-        CasNasobek[] Arr = (CasNasobek[])Enum.GetValues(aktualniCasovyNasobek.GetType());
-        int j = Array.IndexOf<CasNasobek>(Arr, aktualniCasovyNasobek) + zmena;
-        aktualniCasovyNasobek = (Arr.Length == j) ? Arr[0] : Arr[j];
+        CasNasobek[] poleNasobku = (CasNasobek[])Enum.GetValues(aktualniCasovyNasobek.GetType());
+        int j = Array.IndexOf<CasNasobek>(poleNasobku, aktualniCasovyNasobek) + zmena;
+
+        aktualniCasovyNasobek = (poleNasobku.Length == j) ? poleNasobku[0] : poleNasobku[j];
+        timeSpeedUp.interactable = !(aktualniCasovyNasobek == CasNasobek.denZaS);
+        timeSpeedDown.interactable = !(aktualniCasovyNasobek == CasNasobek.jedna || aktualniCasovyNasobek == CasNasobek.pauza);
     }
 
     public void ZastavitCas()

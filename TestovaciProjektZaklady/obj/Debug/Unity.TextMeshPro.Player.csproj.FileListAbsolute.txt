@@ -1,0 +1,2 @@
+D:\Programování\unityprojects\MAP-github\TestovaciProjektZaklady\obj\Debug\Unity.TextMeshPro.Player.csproj.AssemblyReference.cache
+D:\Programování\unityprojects\MAP-github\TestovaciProjektZaklady\obj\Debug\Unity.TextMeshPro.Player.csproj.CoreCompileInputs.cache
