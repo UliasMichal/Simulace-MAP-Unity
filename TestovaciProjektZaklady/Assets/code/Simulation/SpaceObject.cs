@@ -76,9 +76,9 @@ public class SpaceObject : MonoBehaviour
             MoveBy(rychlost); 
         }
 
-        OvladaniTrailRendereru();
-        OvladaniPopisku();
-        OvladaniLineRendereru();
+        //OvladaniTrailRendereru();
+        //OvladaniPopisku();
+        //OvladaniLineRendereru();
     }
 
     void OvladaniTrailRendereru() 
@@ -125,7 +125,7 @@ public class SpaceObject : MonoBehaviour
     void OvladaniLineRendereru() 
     {
         //Metoda umožòuje skrýt/odkrýt silové pùsobení na planetu
-        Transform parentSilocar = GetChild("ParentSilocar", this.transform);
+        Transform parentSilocar = SpaceObject.GetChild(this.transform, "ParentSilocar");
         foreach (Transform child in parentSilocar)
         {
             GameObject.Destroy(child.gameObject);
@@ -162,7 +162,7 @@ public class SpaceObject : MonoBehaviour
         return gameObjectToReturn;
     }
 
-    Transform GetChild(string childToFind, Transform hlavni) 
+    public static Transform GetChild(Transform hlavni, string childToFind) 
     {
         foreach(Transform t in hlavni) 
         {
@@ -171,7 +171,7 @@ public class SpaceObject : MonoBehaviour
                 return t;
             }
         }
-        throw new System.ArgumentNullException("ERROR: Child of a given parent has not been found!");
+        throw new System.ArgumentException("ERROR: Child of a given parent has not been found!");
     }
 
     void MoveBy(Vector3 rychlostObjektu)

@@ -33,12 +33,28 @@ public class MenuManager : MonoBehaviour
     public GameObject ClosePU;
     public GameObject FilePU;
     public GameObject ErrorPU;
+    public GameObject SelectPlanetPU;
+    public GameObject PlanetOptionsPU;
     public GameObject CreatePU;
     public GameObject DeletePU;
     public GameObject UpdatePU;
 
     //Vlastnosti pop-upù
-    
+    public Dropdown DropboxPlanetOptionsPU;
+    public Toggle PopisekCM;
+    public Toggle DrahyCM;
+    public Toggle SilocaryCM;
+    public Toggle NoGravCM;
+    public Toggle NoMoveCM;
+    public Dropdown DropboxPlanetSelectPU;
+    public Text InfoMass;
+    public Text InfoPosition;
+    public Text InfoRychlost;
+    public Text InfoSilovePusobeni;
+
+    //Activate
+    private bool InfoActivated = false;
+
 
     public enum ControlPanelModes 
     {
@@ -48,12 +64,110 @@ public class MenuManager : MonoBehaviour
         probeCP = 3,
         optionsCP = 4
     }
+
+    public enum OptionsPlanetCheckmarks 
+    {
+        popisekCM = 0,
+        drahyCM = 1,
+        silocaryCM = 2,
+        noGravCM = 3,
+        noMoveCM = 4,
+    }
+
     private void FixedUpdate()
     {
         if (Screen.width < 450 || Screen.height < 400)
         {
             Screen.SetResolution(450, 400, false);
         }
+        if (InfoActivated) 
+        {
+            LoadPlanetInfo();
+        }
+    }
+
+    private void LoadPlanetInfo()
+    {
+        SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxPlanetSelectPU.options[DropboxPlanetSelectPU.value].text).gameObject.GetComponent<SpaceObject>();
+        InfoPosition.text = ParserVector3(hledanaPlaneta.transform.position * 100000, " km\n");
+        InfoMass.text = hledanaPlaneta.mass.ToString();
+        InfoRychlost.text = ParserVector3(hledanaPlaneta.rychlost, " km/s\n");
+        InfoSilovePusobeni.text = ParserVector3(hledanaPlaneta.aktualniSilovePusobeni, " km/s\n");
+    }
+
+    private string ParserVector3(Vector3 toConvert, string endlineSJednotkou) 
+    {
+        string s = "x: " + toConvert.x + endlineSJednotkou + "y: " + toConvert.y + endlineSJednotkou + "z: " + toConvert.z + endlineSJednotkou;
+        return s;
+    }
+
+    public void SetUpdatingInfoPlanet(bool toChange) 
+    {
+        InfoActivated = toChange;
+    }
+
+    public void LoadSettingsPlanet() 
+    {
+        SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxPlanetOptionsPU.options[DropboxPlanetOptionsPU.value].text).gameObject.GetComponent<SpaceObject>();
+        PopisekCM.isOn = hledanaPlaneta.zobrazitPopisek;
+        DrahyCM.isOn = hledanaPlaneta.zobrazitDrahy;
+        SilocaryCM.isOn = hledanaPlaneta.zobrazitSilocary;
+
+        NoGravCM.isOn = hledanaPlaneta.noGravityEffect;
+        NoMoveCM.isOn = hledanaPlaneta.noMovement;
+    }
+
+    public void ChangeOfCM(int infoCM) 
+    {
+        SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxPlanetOptionsPU.options[DropboxPlanetSelectPU.value].text).gameObject.GetComponent<SpaceObject>();
+
+        if (infoCM == (int)OptionsPlanetCheckmarks.popisekCM) 
+        {
+            hledanaPlaneta.zobrazitPopisek = PopisekCM.isOn;
+        }
+        if (infoCM == (int)OptionsPlanetCheckmarks.drahyCM)
+        {
+            hledanaPlaneta.zobrazitDrahy = DrahyCM.isOn;
+        }
+        if (infoCM == (int)OptionsPlanetCheckmarks.silocaryCM)
+        {
+            hledanaPlaneta.zobrazitSilocary = SilocaryCM.isOn;
+        }
+
+        if (infoCM == (int)OptionsPlanetCheckmarks.noGravCM)
+        {
+            hledanaPlaneta.noGravityEffect = NoGravCM.isOn;
+        }
+        if (infoCM == (int)OptionsPlanetCheckmarks.noMoveCM)
+        {
+            hledanaPlaneta.noMovement = NoMoveCM.isOn;
+        }
+    }
+
+    public void UpdateDropboxDlePlanet(Dropdown dbToUpdate)
+    {
+        dbToUpdate.options.Clear();
+        foreach (Transform t in ObjektySimulace.transform) 
+        {
+            dbToUpdate.options.Add(new Dropdown.OptionData() { text = t.name.ToString()});
+        }
+    }
+
+    public void OpenPlanetOptionsPU()
+    {
+        CloseAllPopUps();
+        UpdateDropboxDlePlanet(DropboxPlanetOptionsPU);
+        LoadSettingsPlanet();
+        PlanetOptionsPU.SetActive(true);
+    }
+    
+    public void OpenSelectPlanetPU()
+    {
+        CloseAllPopUps();
+        SetUpdatingInfoPlanet(false);
+        UpdateDropboxDlePlanet(DropboxPlanetSelectPU);
+        SelectPlanetPU.SetActive(true);
+        SetUpdatingInfoPlanet(true);
     }
 
     public void SetPoziceKamery()
@@ -119,6 +233,8 @@ public class MenuManager : MonoBehaviour
         ClosePU.SetActive(false);
         FilePU.SetActive(false);
         ErrorPU.SetActive(false);
+        SelectPlanetPU.SetActive(false);
+        PlanetOptionsPU.SetActive(false);
     }
 
     public void OpenClosePU() 
@@ -227,6 +343,7 @@ public class MenuManager : MonoBehaviour
             return;
         }
     }
+
     public void CreateSpaceObject()
     {
         SpaceObjectData sod = GetDataFromMain();
