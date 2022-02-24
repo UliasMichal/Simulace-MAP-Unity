@@ -58,16 +58,14 @@
   <ItemGroup>
     <Compile Include="Assets\code\Simulation\DebugPosition.cs" />
     <Compile Include="Assets\code\Menu&amp;UI\MainMenu.cs" />
-    <Compile Include="Assets\code\Menu&amp;UI\CameraControl\MoveCamSimple.cs" />
     <Compile Include="Assets\code\Menu&amp;UI\MenuManager.cs" />
     <Compile Include="Assets\code\Simulation\SpaceObject.cs" />
     <Compile Include="Assets\code\Data\SpaceObjectData.cs" />
-    <Compile Include="Assets\code\Menu&amp;UI\CameraControl\FollowCamScript.cs" />
     <Compile Include="Assets\code\Data\SimulationData.cs" />
     <Compile Include="Assets\code\Simulation\GravityManager.cs" />
     <Compile Include="Assets\code\Simulation\TimeManager.cs" />
-    <Compile Include="Assets\code\Data\LoadSimulation.cs" />
     <Compile Include="Assets\code\Menu&amp;UI\CameraControl\FullMoveCamScript.cs" />
+    <Compile Include="Assets\code\Data\LoadSimulation.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -75,7 +75,7 @@ public class SpaceObject : MonoBehaviour
             rychlost += aktualniSilovePusobeni;
             MoveBy(rychlost); 
         }
-
+        
         OvladaniTrailRendereru();
         OvladaniPopisku();
         OvladaniLineRendereru();

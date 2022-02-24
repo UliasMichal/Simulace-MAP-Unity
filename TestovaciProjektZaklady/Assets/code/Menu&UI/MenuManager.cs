@@ -93,13 +93,13 @@ public class MenuManager : MonoBehaviour
     private void LoadPlanetInfo()
     {
         SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxPlanetSelectPU.options[DropboxPlanetSelectPU.value].text).gameObject.GetComponent<SpaceObject>();
-        InfoPosition.text = ParserVector3(hledanaPlaneta.transform.position * 100000, " km\n");
+        InfoPosition.text = MenuManager.ParserVector3(hledanaPlaneta.transform.position * 100000, " km\n");
         InfoMass.text = hledanaPlaneta.mass.ToString();
-        InfoRychlost.text = ParserVector3(hledanaPlaneta.rychlost, " km/s\n");
-        InfoSilovePusobeni.text = ParserVector3(hledanaPlaneta.aktualniSilovePusobeni/hledanaPlaneta.mass, " N\n");
+        InfoRychlost.text = MenuManager.ParserVector3(hledanaPlaneta.rychlost, " km/s\n");
+        InfoSilovePusobeni.text = MenuManager.ParserVector3(hledanaPlaneta.aktualniSilovePusobeni/hledanaPlaneta.mass, " N\n");
     }
 
-    private string ParserVector3(Vector3 toConvert, string endlineSJednotkou) 
+    public static string ParserVector3(Vector3 toConvert, string endlineSJednotkou) 
     {
         string s = "x: " + toConvert.x + endlineSJednotkou + "y: " + toConvert.y + endlineSJednotkou + "z: " + toConvert.z + endlineSJednotkou;
         return s;

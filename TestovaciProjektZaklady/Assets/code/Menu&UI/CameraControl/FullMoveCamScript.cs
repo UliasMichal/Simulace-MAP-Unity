@@ -22,6 +22,14 @@ public class FullMoveCamScript : MonoBehaviour
     public float MoveSpeedCam = 10f;
     public float bounds = 7500f;
 
+    public GameObject InfoSledovaneho;
+    public Text FollowName;
+    public Text FollowMass;
+    public Text FollowPosition;
+    public Text FollowSpeed;
+    public Text FollowSilPus;
+
+
     /*
     Tlaèítko na vypnutí sledování
     Informaèní text hodnoty
@@ -47,6 +55,19 @@ public class FullMoveCamScript : MonoBehaviour
         KameraRotX.text = CamWithLight.transform.localRotation.eulerAngles.x.ToString() + "°";
         KameraRotY.text = CamWithLight.transform.localRotation.eulerAngles.y.ToString() + "°";
         KameraRotZ.text = CamWithLight.transform.localRotation.eulerAngles.z.ToString() + "°";
+
+        bool zobrazit = ObjectOfCamera.GetComponent<SpaceObject>() != null;
+        if (zobrazit) 
+        {
+            SpaceObject sledovanyObjekt = ObjectOfCamera.GetComponent<SpaceObject>();
+            FollowName.text = sledovanyObjekt.name;
+            FollowMass.text = sledovanyObjekt.mass + " kg";
+            FollowPosition.text = MenuManager.ParserVector3(sledovanyObjekt.transform.position * 100000, " km\n");
+            FollowSpeed.text = MenuManager.ParserVector3(sledovanyObjekt.rychlost, " km/s\n");
+            FollowSilPus.text = MenuManager.ParserVector3(sledovanyObjekt.aktualniSilovePusobeni, " N\n");
+        }
+
+        InfoSledovaneho.SetActive(zobrazit);
     }
 
 
