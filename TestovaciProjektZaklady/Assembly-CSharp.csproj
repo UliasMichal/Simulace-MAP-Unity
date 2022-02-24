@@ -62,10 +62,12 @@
     <Compile Include="Assets\code\Menu&amp;UI\MenuManager.cs" />
     <Compile Include="Assets\code\Simulation\SpaceObject.cs" />
     <Compile Include="Assets\code\Data\SpaceObjectData.cs" />
+    <Compile Include="Assets\code\Menu&amp;UI\CameraControl\FollowCamScript.cs" />
     <Compile Include="Assets\code\Data\SimulationData.cs" />
     <Compile Include="Assets\code\Simulation\GravityManager.cs" />
     <Compile Include="Assets\code\Simulation\TimeManager.cs" />
     <Compile Include="Assets\code\Data\LoadSimulation.cs" />
+    <Compile Include="Assets\code\Menu&amp;UI\CameraControl\FullMoveCamScript.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

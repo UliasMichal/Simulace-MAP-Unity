@@ -35,7 +35,8 @@ public class MoveCamSimple : MonoBehaviour
         Tab + WASDRF = otáèení kolem os
         Shift + WASDRF = 100x rychlejší pohyb kolem os
         */
-
+        //pøidat podmínku: pokud není FollowCamScript active
+        
         if (!Input.GetKey(KeyCode.Tab))
         {
             //Zrychlení pomocí levého shiftu

@@ -35,6 +35,8 @@ public class MenuManager : MonoBehaviour
     public GameObject ErrorPU;
     public GameObject SelectPlanetPU;
     public GameObject PlanetOptionsPU;
+    public GameObject PlanetMoveToPU;
+    public GameObject PlanetFollowPU;
     public GameObject CreatePU;
     public GameObject DeletePU;
     public GameObject UpdatePU;
@@ -51,6 +53,8 @@ public class MenuManager : MonoBehaviour
     public Text InfoPosition;
     public Text InfoRychlost;
     public Text InfoSilovePusobeni;
+    public Dropdown DropboxMoveToPlanetPU;
+    public Dropdown DropboxFollowPlanetPU;
 
     //Activate
     private bool InfoActivated = false;
@@ -92,7 +96,7 @@ public class MenuManager : MonoBehaviour
         InfoPosition.text = ParserVector3(hledanaPlaneta.transform.position * 100000, " km\n");
         InfoMass.text = hledanaPlaneta.mass.ToString();
         InfoRychlost.text = ParserVector3(hledanaPlaneta.rychlost, " km/s\n");
-        InfoSilovePusobeni.text = ParserVector3(hledanaPlaneta.aktualniSilovePusobeni, " km/s\n");
+        InfoSilovePusobeni.text = ParserVector3(hledanaPlaneta.aktualniSilovePusobeni/hledanaPlaneta.mass, " N\n");
     }
 
     private string ParserVector3(Vector3 toConvert, string endlineSJednotkou) 
@@ -170,6 +174,40 @@ public class MenuManager : MonoBehaviour
         SetUpdatingInfoPlanet(true);
     }
 
+    public void OpenMoveToPU()
+    {
+        CloseAllPopUps();
+        UpdateDropboxDlePlanet(DropboxMoveToPlanetPU);
+        PlanetMoveToPU.SetActive(true);
+    }
+
+    public void OpenFollowPU()
+    {
+        CloseAllPopUps();
+        UpdateDropboxDlePlanet(DropboxFollowPlanetPU);
+        PlanetFollowPU.SetActive(true);
+    }
+
+    public void SetPoziceKameryToPlanet() 
+    {
+        Vector3 pozicePlanety = SpaceObject.GetChild(ObjektySimulace.transform, DropboxMoveToPlanetPU.options[DropboxMoveToPlanetPU.value].text).position;
+        KameraASvetla.GetComponent<FullMoveCamScript>().Deactivate(); 
+        KameraASvetla.GetComponent<FullMoveCamScript>().OffsetPos = pozicePlanety;
+    }
+
+    public void SetDefaultPozici()
+    {
+        Vector3 defaultPozice = new Vector3(0f, 0f, -350f);
+
+        KameraASvetla.GetComponent<FullMoveCamScript>().Deactivate();
+        KameraASvetla.GetComponent<FullMoveCamScript>().OffsetPos = defaultPozice;
+
+        Quaternion defaultRotace = new Quaternion();
+        defaultRotace.eulerAngles = new Vector3(0f, 0f, 0f);
+        KameraASvetla.transform.rotation = defaultRotace;
+        
+    }
+
     public void SetPoziceKamery()
     {
         float xPos = ParserProOddelovace(PoziceX.text);
@@ -215,6 +253,14 @@ public class MenuManager : MonoBehaviour
         KameraASvetla.transform.rotation = qRotace;
     }
 
+    public void FollowPlanet()
+    {
+        GameObject objectToFollow = SpaceObject.GetChild(ObjektySimulace.transform, DropboxFollowPlanetPU.options[DropboxFollowPlanetPU.value].text).gameObject;
+        KameraASvetla.GetComponent<FullMoveCamScript>().Activate(objectToFollow);
+        KameraASvetla.GetComponent<FullMoveCamScript>().OffsetPos = new Vector3(0f, 0f, 0f);
+        CloseAllPopUps();
+    }
+
     private float ParserProOddelovace(string input) 
     {
         if(float.TryParse(input.Replace(',', '.'), out float teckaVal)) 
@@ -235,6 +281,8 @@ public class MenuManager : MonoBehaviour
         ErrorPU.SetActive(false);
         SelectPlanetPU.SetActive(false);
         PlanetOptionsPU.SetActive(false);
+        PlanetMoveToPU.SetActive(false);
+        PlanetFollowPU.SetActive(false);
     }
 
     public void OpenClosePU() 

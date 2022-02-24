@@ -76,9 +76,9 @@ public class SpaceObject : MonoBehaviour
             MoveBy(rychlost); 
         }
 
-        //OvladaniTrailRendereru();
-        //OvladaniPopisku();
-        //OvladaniLineRendereru();
+        OvladaniTrailRendereru();
+        OvladaniPopisku();
+        OvladaniLineRendereru();
     }
 
     void OvladaniTrailRendereru() 
@@ -109,9 +109,11 @@ public class SpaceObject : MonoBehaviour
         //Metoda umožòuje skrýt/odkrýt název planety
         
         TextMesh popisekObjektu = this.GetComponentInChildren<TextMesh>();
-        if (zobrazitPopisek) 
+        if (zobrazitPopisek)
         {
-            popisekObjektu.fontSize = (int)(GameObject.Find("CameraAndLights").transform.position.magnitude / 7);
+            //popisekObjektu.characterSize = (float)(GameObject.Find("CameraAndLights").transform.position.magnitude);
+            popisekObjektu.characterSize = Vector3.Distance(GameObject.Find("CameraAndLights").transform.position, this.transform.position)/750f;
+            popisekObjektu.fontSize = 255;
             popisekObjektu.transform.rotation = GameObject.Find("CameraAndLights").transform.rotation;
             popisekObjektu.transform.position = this.transform.position;
             popisekObjektu.text = this.name;
