@@ -61,7 +61,10 @@ public class SpaceObject : MonoBehaviour
         this.transform.position = new Vector3(dataToLoad.position[0], dataToLoad.position[1], dataToLoad.position[2]);
 
         //Nastaví aktuální rychlost dle uložených souøadnic XYZ
-        this.rychlost  = new Vector3(dataToLoad.currentSpeed[0], dataToLoad.currentSpeed[1], dataToLoad.currentSpeed[2]);
+        this.rychlost = new Vector3(dataToLoad.currentSpeed[0], dataToLoad.currentSpeed[1], dataToLoad.currentSpeed[2]);
+
+        //Nastaví scale objektu
+        this.transform.localScale = new Vector3(dataToLoad.scale[0], dataToLoad.scale[1], dataToLoad.scale[2]);
     }
     #endregion
 

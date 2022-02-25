@@ -37,7 +37,8 @@ public class MenuManager : MonoBehaviour
     public GameObject PlanetOptionsPU;
     public GameObject PlanetMoveToPU;
     public GameObject PlanetFollowPU;
-    public GameObject CreateOrUpdatePU;
+    public GameObject CreateOrUpdateValuePU;
+    public GameObject SelectToUpdatePU;
     public GameObject DeletePU;
 
     //Vlastnosti pop-upù
@@ -66,9 +67,14 @@ public class MenuManager : MonoBehaviour
     //Planet destroy
     public Dropdown DropboxDestroyPlanetPU;
 
+    //Planet select update
+    public Dropdown DropboxUpdatePlanetPU;
+
     //Planet create or update
     public Text CreateTitle;
     public Text UpdateTitle;
+    public InputField CUNazevObjektu;
+    public InputField CUMassObjektu;
     public InputField CUPolohaX;
     public InputField CUPolohaY;
     public InputField CUPolohaZ;
@@ -78,21 +84,19 @@ public class MenuManager : MonoBehaviour
     public InputField CURed;
     public InputField CUGreen;
     public InputField CUBlue;
-    public Slider CUScrollRed;
-    public Slider CUScrollGreen;
-    public Slider CUScrollBlue;
-    public GameObject CUColorPalette;
+    public Image CUColorPalette;
     public InputField CUSize; 
     public Toggle CUNoGravCB;
     public Toggle CUNoMoveCB;
     public Toggle CUIsProbeCB;
-    public Button CUCreateButton;
-    public Button CUUpdateButton;
+    public GameObject CUCreateButton;
+    public GameObject CUUpdateButton;
 
     #endregion
 
     //Activate
     private bool InfoActivated = false;
+    private GameObject objectToUpdate;
 
 
     public enum ControlPanelModes 
@@ -119,9 +123,15 @@ public class MenuManager : MonoBehaviour
         {
             Screen.SetResolution(450, 400, false);
         }
+
         if (InfoActivated) 
         {
             LoadPlanetInfo();
+        }
+
+        if (CreateOrUpdateValuePU.activeInHierarchy)
+        {
+            UpdatePalette();
         }
     }
 
@@ -132,6 +142,165 @@ public class MenuManager : MonoBehaviour
         InfoMass.text = hledanaPlaneta.mass.ToString();
         InfoRychlost.text = MenuManager.ParserVector3(hledanaPlaneta.rychlost, " km/s\n");
         InfoSilovePusobeni.text = MenuManager.ParserVector3(hledanaPlaneta.aktualniSilovePusobeni/hledanaPlaneta.mass, " N\n");
+    }
+
+    private void LoadPlanetSettings(bool loadFromDropbox)
+    {
+        if (loadFromDropbox)
+        {
+            SpaceObject hledanaPlaneta = objectToUpdate.GetComponent<SpaceObject>();
+            CUNazevObjektu.text = hledanaPlaneta.name;
+            CUMassObjektu.text = hledanaPlaneta.mass.ToString();
+            CUPolohaX.text = hledanaPlaneta.transform.position.x.ToString();
+            CUPolohaY.text = hledanaPlaneta.transform.position.y.ToString();
+            CUPolohaZ.text = hledanaPlaneta.transform.position.z.ToString();
+            CURychlostX.text = hledanaPlaneta.rychlost.x.ToString();
+            CURychlostY.text = hledanaPlaneta.rychlost.y.ToString();
+            CURychlostZ.text = hledanaPlaneta.rychlost.z.ToString();
+            CURed.text = (hledanaPlaneta.GetComponent<MeshRenderer>().materials[0].color.r * 255).ToString();
+            CUGreen.text = (hledanaPlaneta.GetComponent<MeshRenderer>().materials[0].color.g * 255).ToString();
+            CUBlue.text = (hledanaPlaneta.GetComponent<MeshRenderer>().materials[0].color.b * 255).ToString();
+            CUSize.text = hledanaPlaneta.transform.localScale.x.ToString();
+            CUNoGravCB.isOn = hledanaPlaneta.noGravityEffect;
+            CUNoMoveCB.isOn = hledanaPlaneta.noMovement;
+            CUIsProbeCB.isOn = hledanaPlaneta.isProbe;
+        }
+        else 
+        {
+            CUNazevObjektu.text = "";
+            CUMassObjektu.text = "";
+            CUPolohaX.text = "";
+            CUPolohaY.text = "";
+            CUPolohaZ.text = "";
+            CURychlostX.text = "";
+            CURychlostY.text = "";
+            CURychlostZ.text = "";
+            CURed.text = "255";
+            CUGreen.text = "255";
+            CUBlue.text = "255";
+            CUSize.text = "";
+            CUNoGravCB.isOn = false;
+            CUNoMoveCB.isOn = false;
+            CUIsProbeCB.isOn = false;
+        }
+    }
+
+    public void UpdatePalette()
+    {
+        if (!(CURed.text == "" || CUGreen.text == "" || CUBlue.text == ""))
+        {
+            CUColorPalette.color = new Color(ParserProOddelovace(CURed.text) / 255, ParserProOddelovace(CUGreen.text) / 255, ParserProOddelovace(CUBlue.text) / 255);
+        }
+    }
+
+    public void OpenPlanetDeletePU()
+    {
+        SpeedPausePlay(true);
+        CloseAllPopUps();
+        UpdateDropboxDlePlanet(DropboxDestroyPlanetPU);
+        DeletePU.SetActive(true);
+    }
+
+    public void OpenSelectPlanetUpdatePU()
+    {
+        SpeedPausePlay(true);
+        CloseAllPopUps();
+        UpdateDropboxDlePlanet(DropboxUpdatePlanetPU);
+        SelectToUpdatePU.SetActive(true);
+    }
+
+    public void DeleteSelectedPlanet() 
+    {
+        SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxDestroyPlanetPU.options[DropboxDestroyPlanetPU.value].text).gameObject.GetComponent<SpaceObject>();
+        GameObject.Destroy(hledanaPlaneta.gameObject);
+        CloseAllPopUps();
+    }
+
+    public void CreatePlanet() 
+    {
+        GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        newObject.name = CUNazevObjektu.text;
+
+        newObject.transform.parent = ObjektySimulace.transform;
+
+        LoadSimulation.AddSpaceObject(newObject, GetSpaceObjectData());
+        LoadSimulation.AddTrailRenderer(newObject);
+        LoadSimulation.AddPopisek(newObject);
+        LoadSimulation.AddParentSilocar(newObject);
+    }
+
+    public void SelectPlanetToUpdateAndOpenUpdate()
+    {
+        objectToUpdate = SpaceObject.GetChild(ObjektySimulace.transform, DropboxUpdatePlanetPU.options[DropboxUpdatePlanetPU.value].text).gameObject.GetComponent<SpaceObject>().gameObject;
+        CloseAllPopUps();
+        OpenPlanetCreateOrUpdatePU(false);
+    }
+
+    public void UpdatePlanet()
+    {
+        objectToUpdate.name = CUNazevObjektu.text;
+
+        SpaceObjectData dataToLoad = GetSpaceObjectData();
+
+        objectToUpdate.GetComponent<SpaceObject>().LoadFromData(dataToLoad);
+
+        CloseAllPopUps();
+    }
+
+    private SpaceObjectData GetSpaceObjectData() 
+    {
+        SpaceObjectData spaceObjectDataInput = new SpaceObjectData();
+
+        spaceObjectDataInput.name = CUNazevObjektu.text;
+        spaceObjectDataInput.mass = ParserProOddelovace(CUMassObjektu.text);
+
+        spaceObjectDataInput.position = new float[3];
+        spaceObjectDataInput.position[0] = ParserProOddelovace(CUPolohaX.text);
+        spaceObjectDataInput.position[1] = ParserProOddelovace(CUPolohaY.text);
+        spaceObjectDataInput.position[2] = ParserProOddelovace(CUPolohaZ.text);
+
+        spaceObjectDataInput.currentSpeed = new float[3];
+        spaceObjectDataInput.currentSpeed[0] = ParserProOddelovace(CURychlostX.text);
+        spaceObjectDataInput.currentSpeed[1] = ParserProOddelovace(CURychlostY.text);
+        spaceObjectDataInput.currentSpeed[2] = ParserProOddelovace(CURychlostZ.text);
+
+        spaceObjectDataInput.colour = new float[3];
+        spaceObjectDataInput.colour[0] = ParserProOddelovace(CURed.text);
+        spaceObjectDataInput.colour[1] = ParserProOddelovace(CUGreen.text);
+        spaceObjectDataInput.colour[2] = ParserProOddelovace(CUBlue.text);
+
+        spaceObjectDataInput.scale = new float[3];
+        spaceObjectDataInput.scale[0] = ParserProOddelovace(CUSize.text);
+        spaceObjectDataInput.scale[1] = ParserProOddelovace(CUSize.text);
+        spaceObjectDataInput.scale[2] = ParserProOddelovace(CUSize.text);
+
+        spaceObjectDataInput.noGravityEffect = CUNoGravCB.isOn;
+        spaceObjectDataInput.noMovement = CUNoMoveCB.isOn;
+        spaceObjectDataInput.isProbe = CUIsProbeCB.isOn;
+        
+        return spaceObjectDataInput;
+    }
+
+    public void OpenPlanetCreateOrUpdatePU(bool create)
+    {
+        SpeedPausePlay(true);
+        CloseAllPopUps();
+        CreateOrUpdateValuePU.SetActive(true);
+        LoadPlanetSettings(!create);
+        if (create) 
+        {
+            CreateTitle.enabled = true;
+            CUCreateButton.SetActive(true);
+            UpdateTitle.enabled = false;
+            CUUpdateButton.SetActive(false);
+        }
+        else
+        {
+            CreateTitle.enabled = false;
+            CUCreateButton.SetActive(false);
+            UpdateTitle.enabled = true;
+            CUUpdateButton.SetActive(true);
+        }
     }
 
     public static string ParserVector3(Vector3 toConvert, string endlineSJednotkou) 
@@ -190,6 +359,8 @@ public class MenuManager : MonoBehaviour
         {
             dbToUpdate.options.Add(new Dropdown.OptionData() { text = t.name.ToString()});
         }
+        dbToUpdate.value = 0;
+        dbToUpdate.RefreshShownValue();
     }
 
     public void OpenPlanetOptionsPU()
@@ -203,7 +374,6 @@ public class MenuManager : MonoBehaviour
     public void OpenSelectPlanetPU()
     {
         CloseAllPopUps();
-        SetUpdatingInfoPlanet(false);
         UpdateDropboxDlePlanet(DropboxPlanetSelectPU);
         SelectPlanetPU.SetActive(true);
         SetUpdatingInfoPlanet(true);
@@ -302,7 +472,7 @@ public class MenuManager : MonoBehaviour
         {
             return teckaVal;
         }
-        if (float.TryParse(input.Replace(',', '.'), out float carkaVal)) 
+        if (float.TryParse(input.Replace('.', ','), out float carkaVal)) 
         {
             return carkaVal;
         }
@@ -318,6 +488,9 @@ public class MenuManager : MonoBehaviour
         PlanetOptionsPU.SetActive(false);
         PlanetMoveToPU.SetActive(false);
         PlanetFollowPU.SetActive(false);
+        DeletePU.SetActive(false);  
+        SelectToUpdatePU.SetActive(false);
+        CreateOrUpdateValuePU.SetActive(false);
     }
 
     public void OpenClosePU() 
@@ -427,45 +600,8 @@ public class MenuManager : MonoBehaviour
         }
     }
 
-    public void CreateSpaceObject()
-    {
-        SpaceObjectData sod = GetDataFromMain();
-
-        GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-
-        newObject.transform.parent = this.transform;
-
-        AddSpaceObject(newObject, sod);
-        AddTrailRenderer(newObject);
-    }
-
-    SpaceObjectData GetDataFromMain()
-    {
-        SpaceObjectData sod = new SpaceObjectData();
-        return sod;
-    }
-
-    void AddSpaceObject(GameObject toAdd, SpaceObjectData sod)
-    {
-        toAdd.AddComponent<SpaceObject>();
-
-        toAdd.GetComponent<SpaceObject>().LoadFromData(sod);
-
-        toAdd.GetComponent<SpaceObject>().vsechnaSilovaPusobeni = new List<Vector3>();
-    }
-
-    void AddTrailRenderer(GameObject toAdd)
-    {
-        toAdd.AddComponent<TrailRenderer>();
-        toAdd.GetComponent<TrailRenderer>().widthMultiplier = 0.5f;
-        toAdd.GetComponent<TrailRenderer>().time = float.PositiveInfinity;
-        toAdd.GetComponent<TrailRenderer>().enabled = true;
-        toAdd.GetComponent<TrailRenderer>().emitting = true;
-    }
-
     public void SaveToFile(int fileNumber) 
     {
-        
         string path = Application.persistentDataPath + "/LoadFile" + fileNumber.ToString() + ".slf";
 
         SimulationData dataToSave = new SimulationData(ObjektySimulace, TimeManager.GetComponent<TimeManager>());

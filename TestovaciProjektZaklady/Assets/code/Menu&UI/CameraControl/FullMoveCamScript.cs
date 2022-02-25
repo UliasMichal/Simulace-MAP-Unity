@@ -29,12 +29,6 @@ public class FullMoveCamScript : MonoBehaviour
     public Text FollowSpeed;
     public Text FollowSilPus;
 
-
-    /*
-    Tlaèítko na vypnutí sledování
-    Informaèní text hodnoty
-     */
-
     public void Activate(GameObject toFollow)
     {
         ObjectOfCamera = toFollow;
@@ -79,89 +73,106 @@ public class FullMoveCamScript : MonoBehaviour
         Tab + WASDRF = otáèení kolem os
         Shift + WASDRF = 100x rychlejší pohyb kolem os
         */
-        //pøidat podmínku: pokud není FollowCamScript active
 
-        if (!Input.GetKey(KeyCode.Tab))
+        //pøidat podmínku: pokud uživatel nepíše
+
+        if (!IsUserTyping())
         {
-            //Zrychlení pomocí levého shiftu
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (!Input.GetKey(KeyCode.Tab))
             {
-                MoveSpeedCam = 1f / 10f;
-            }
+                //Zrychlení pomocí levého shiftu
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    MoveSpeedCam = 1f / 10f;
+                }
 
-            #region Pohyby
-            //Pohyby - X
-            if (Input.GetKey(KeyCode.A))
-            {
-                OffsetPos += (Vector3.left / MoveSpeedCam);
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                OffsetPos += (Vector3.right / MoveSpeedCam);
-            }
+                #region Pohyby
+                //Pohyby - X
+                if (Input.GetKey(KeyCode.A))
+                {
+                    OffsetPos += (Vector3.left / MoveSpeedCam);
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    OffsetPos += (Vector3.right / MoveSpeedCam);
+                }
 
-            //Pohyby - Y
-            if (Input.GetKey(KeyCode.R))
-            {
-                OffsetPos += (Vector3.forward / MoveSpeedCam);
-            }
-            if (Input.GetKey(KeyCode.F))
-            {
-                OffsetPos += (Vector3.back / MoveSpeedCam);
-            }
+                //Pohyby - Y
+                if (Input.GetKey(KeyCode.R))
+                {
+                    OffsetPos += (Vector3.forward / MoveSpeedCam);
+                }
+                if (Input.GetKey(KeyCode.F))
+                {
+                    OffsetPos += (Vector3.back / MoveSpeedCam);
+                }
 
-            //Pohyby - Z
-            if (Input.GetKey(KeyCode.W))
-            {
-                OffsetPos += (Vector3.up / MoveSpeedCam);
+                //Pohyby - Z
+                if (Input.GetKey(KeyCode.W))
+                {
+                    OffsetPos += (Vector3.up / MoveSpeedCam);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    OffsetPos += (Vector3.down / MoveSpeedCam);
+                }
+
+                SetCameraToBounds();
+                MoveSpeedCam = 10f;
+
+                #endregion
+
             }
-            if (Input.GetKey(KeyCode.S))
+            else
             {
-                OffsetPos += (Vector3.down / MoveSpeedCam);
+                #region Rotace
+                //Rotace - X
+                if (Input.GetKey(KeyCode.A))
+                {
+                    CamWithLight.transform.Rotate(Vector3.left / MoveSpeedCam);
+                }
+                if (Input.GetKey(KeyCode.D))
+                {
+                    CamWithLight.transform.Rotate(Vector3.right / MoveSpeedCam);
+                }
+
+                //Rotace - Y
+                if (Input.GetKey(KeyCode.R))
+                {
+                    CamWithLight.transform.Rotate(Vector3.forward / MoveSpeedCam);
+                }
+                if (Input.GetKey(KeyCode.F))
+                {
+                    CamWithLight.transform.Rotate(Vector3.back / MoveSpeedCam);
+                }
+
+                //Rotace - Z
+                if (Input.GetKey(KeyCode.W))
+                {
+                    CamWithLight.transform.Rotate(Vector3.up / MoveSpeedCam);
+                }
+                if (Input.GetKey(KeyCode.S))
+                {
+                    CamWithLight.transform.Rotate(Vector3.down / MoveSpeedCam);
+                }
+                #endregion
             }
-
-            SetCameraToBounds();
-            MoveSpeedCam = 10f;
-
-            #endregion
-
         }
-        else
-        {
-            #region Rotace
-            //Rotace - X
-            if (Input.GetKey(KeyCode.A))
-            {
-                CamWithLight.transform.Rotate(Vector3.left / MoveSpeedCam);
-            }
-            if (Input.GetKey(KeyCode.D))
-            {
-                CamWithLight.transform.Rotate(Vector3.right / MoveSpeedCam);
-            }
 
-            //Rotace - Y
-            if (Input.GetKey(KeyCode.R))
-            {
-                CamWithLight.transform.Rotate(Vector3.forward / MoveSpeedCam);
-            }
-            if (Input.GetKey(KeyCode.F))
-            {
-                CamWithLight.transform.Rotate(Vector3.back / MoveSpeedCam);
-            }
-
-            //Rotace - Z
-            if (Input.GetKey(KeyCode.W))
-            {
-                CamWithLight.transform.Rotate(Vector3.up / MoveSpeedCam);
-            }
-            if (Input.GetKey(KeyCode.S))
-            {
-                CamWithLight.transform.Rotate(Vector3.down / MoveSpeedCam);
-            }
-            #endregion
-        }
         CamWithLight.transform.position = ObjectOfCamera.transform.position + OffsetPos;
 
+    }
+
+    bool IsUserTyping() 
+    {
+        foreach(InputField inputField in GameObject.FindObjectsOfType<InputField>()) 
+        {
+            if (inputField.isFocused) 
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     void SetCameraToBounds()

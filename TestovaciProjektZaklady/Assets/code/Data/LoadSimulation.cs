@@ -17,6 +17,7 @@ public static class LoadSimulation
         foreach (SpaceObjectData sod in sodList)
         {
             GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            newObject.name = sod.name;
 
             newObject.transform.parent = objektSimulace.transform;
 
@@ -27,7 +28,7 @@ public static class LoadSimulation
         }
     }
 
-    static void AddSpaceObject(GameObject toAdd, SpaceObjectData sod)
+    public static void AddSpaceObject(GameObject toAdd, SpaceObjectData sod)
     {
         toAdd.AddComponent<SpaceObject>();
 
@@ -36,7 +37,7 @@ public static class LoadSimulation
         toAdd.GetComponent<SpaceObject>().vsechnaSilovaPusobeni = new List<Vector3>();
     }
 
-    static void AddTrailRenderer(GameObject toAdd)
+    public static void AddTrailRenderer(GameObject toAdd)
     {
         toAdd.AddComponent<TrailRenderer>();
         toAdd.GetComponent<TrailRenderer>().widthMultiplier = 0.5f;
@@ -45,14 +46,14 @@ public static class LoadSimulation
         toAdd.GetComponent<TrailRenderer>().emitting = true;
     }
 
-    static void AddPopisek(GameObject toAdd)
+    public static void AddPopisek(GameObject toAdd)
     {
         GameObject objektPopisku = new GameObject("Label");
         objektPopisku.AddComponent<TextMesh>();
         objektPopisku.transform.SetParent(toAdd.transform);
     }
 
-    static void AddParentSilocar(GameObject toAdd)
+    public static void AddParentSilocar(GameObject toAdd)
     {
         GameObject objektPopisku = new GameObject("ParentSilocar");
         objektPopisku.transform.SetParent(toAdd.transform);
