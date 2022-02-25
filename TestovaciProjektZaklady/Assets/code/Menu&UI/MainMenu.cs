@@ -85,11 +85,16 @@ public class MainMenu : MonoBehaviour
                 try
                 {
                     dataFromFile = JsonUtility.FromJson<SimulationData>(json);
+                    foreach (var so in dataFromFile.Telesa)
+                    {
+                        //Kontroluje validitu objektù - JsonUtility naèítá prázdné objekty, které by neodchycené dìlaly problémy
+                        //Debug.Log se nevypíše po kompilaci, ale slouží to, aby otestoval, zda objekty nejsou prázdné odkazy
+                        Debug.Log(so);
+                    }
                 }
 
                 catch (Exception)
                 {
-                    Debug.Log("PROBLÉM");
                     string errorMessageJSON = "Soubor nemá validní JSON strukturu: ";
                     textOfPopUpInfo.text = errorMessageJSON;
                     textOfPopUpPath.text = pathToFile;
@@ -100,12 +105,7 @@ public class MainMenu : MonoBehaviour
 
                 sr.Close();
 
-                Debug.Log(dataFromFile);
-
                 TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
-
-                //C:\Users\Michal\AppData\LocalLow\DefaultCompany\TestovaciProjektZaklady\soubor.slf
-                //Debug.Log(pathToFile);
 
                 SceneManager.LoadScene(sceneName: "MainScene");
             }

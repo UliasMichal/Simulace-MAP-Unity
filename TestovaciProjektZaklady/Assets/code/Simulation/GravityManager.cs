@@ -10,8 +10,7 @@ public class GravityManager : MonoBehaviour
     public const float gravityConstant = 6.67E-11f;
     public const float meritko = 1000000;
 
-    bool canSimulate = true;
-
+    bool CanSimulate = true;
     
 
     void FixedUpdate()
@@ -25,7 +24,7 @@ public class GravityManager : MonoBehaviour
 
         TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
 
-        if (canSimulate && a != TimeManager.CasNasobek.pauza)
+        if (CanSimulate && a != TimeManager.CasNasobek.pauza)
         {
             SpaceObject[] objekty = this.GetComponentsInChildren<SpaceObject>();
 

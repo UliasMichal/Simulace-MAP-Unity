@@ -1,0 +1,303 @@
+{
+    "Telesa": [
+        {
+            "name": "Sun",
+            "mass": 1.9899999468308078e30,
+            "colour": [
+                1.0,
+                1.0,
+                0.0
+            ],
+            "scale": [
+                3.0,
+                3.0,
+                3.0
+            ],
+            "position": [
+                1.2836745977401734,
+                0.5007104873657227,
+                0.0025893975980579855
+            ],
+            "currentSpeed": [
+                -0.005809369497001171,
+                -0.014619595371186734,
+                0.00025134554016403854
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Mercury",
+            "mass": 3.285000147813869e23,
+            "colour": [
+                0.10196078431,
+                0.10196078431,
+                0.10196078431
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                52.426170349121097,
+                -5.596063137054443,
+                -5.398976802825928
+            ],
+            "currentSpeed": [
+                -3.9317197799682619,
+                50.566139221191409,
+                4.49372673034668
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Venus",
+            "mass": 4.869999810916809e24,
+            "colour": [
+                0.90196078431,
+                0.90196078431,
+                0.90196078431
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                -11.436128616333008,
+                107.6180419921875,
+                2.0819218158721926
+            ],
+            "currentSpeed": [
+                -34.989585876464847,
+                -3.5090115070343019,
+                1.9710121154785157
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Earth",
+            "mass": 5.969999912619192e24,
+            "colour": [
+                0.18431372549,
+                0.41568627451,
+                0.41176470588
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                -27.411476135253908,
+                145.26974487304688,
+                0.019074993208050729
+            ],
+            "currentSpeed": [
+                -28.756973266601564,
+                -5.673128604888916,
+                -0.09368517249822617
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Moon",
+            "mass": 7.299999928155298e23,
+            "colour": [
+                0.99607843137,
+                0.98823529411,
+                0.8431372549
+            ],
+            "scale": [
+                0.3499999940395355,
+                0.3499999940395355,
+                0.3499999940395355
+            ],
+            "position": [
+                -27.50334358215332,
+                144.92291259765626,
+                0.011076724156737328
+            ],
+            "currentSpeed": [
+                -28.756973266601564,
+                -5.673128604888916,
+                -0.09368517249822617
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Mars",
+            "mass": 6.420000163846805e23,
+            "colour": [
+                0.6,
+                0.23921568627,
+                0.0
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                -130.95108032226563,
+                -189.312744140625,
+                -0.7714450359344482
+            ],
+            "currentSpeed": [
+                20.909944534301759,
+                -11.605035781860352,
+                -0.7557181715965271
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Jupiter",
+            "mass": 1.9000000297707774e27,
+            "colour": [
+                0.69019607843,
+                0.49803921568,
+                0.20784313725
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                695.5554809570313,
+                -267.9620056152344,
+                -14.449597358703614
+            ],
+            "currentSpeed": [
+                4.539612770080566,
+                12.805131912231446,
+                -0.15471601486206056
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Saturn",
+            "mass": 5.68000005560064e26,
+            "colour": [
+                0.69019607843,
+                0.56078431372,
+                0.21176470588
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                1039.92919921875,
+                -1056.650146484375,
+                -23.0310001373291
+            ],
+            "currentSpeed": [
+                6.345149993896484,
+                6.756117343902588,
+                -0.37044471502304079
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Uranus",
+            "mass": 8.680000131733569e25,
+            "colour": [
+                0.33333333333,
+                0.50196078431,
+                0.66666666666
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                2152.570556640625,
+                2016.8883056640625,
+                -20.3961124420166
+            ],
+            "currentSpeed": [
+                -4.705853462219238,
+                4.652144432067871,
+                0.07821724563837052
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        },
+        {
+            "name": "Neptune",
+            "mass": 1.0199999853023588e26,
+            "colour": [
+                0.21176470588,
+                0.40784313725,
+                0.58823529411
+            ],
+            "scale": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "position": [
+                4431.7900390625,
+                -611.4486694335938,
+                -89.54348754882813
+            ],
+            "currentSpeed": [
+                0.7066237926483154,
+                5.417076587677002,
+                -0.12713657319545747
+            ],
+            "zobrazitSilocary": false,
+            "zobrazitDrahy": false,
+            "isProbe": false,
+            "noGravityEffect": false,
+            "noMovement": false
+        }
+    ],
+    "datumACasSimulace": [
+        2022,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0
+    ]
+}

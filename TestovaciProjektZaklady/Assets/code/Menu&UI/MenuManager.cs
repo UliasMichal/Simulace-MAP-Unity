@@ -37,24 +37,59 @@ public class MenuManager : MonoBehaviour
     public GameObject PlanetOptionsPU;
     public GameObject PlanetMoveToPU;
     public GameObject PlanetFollowPU;
-    public GameObject CreatePU;
+    public GameObject CreateOrUpdatePU;
     public GameObject DeletePU;
-    public GameObject UpdatePU;
 
     //Vlastnosti pop-upù
+    #region Vlastnosti pop-upù
+    //Planet options
     public Dropdown DropboxPlanetOptionsPU;
     public Toggle PopisekCM;
     public Toggle DrahyCM;
     public Toggle SilocaryCM;
     public Toggle NoGravCM;
     public Toggle NoMoveCM;
+
+    //Planet info
     public Dropdown DropboxPlanetSelectPU;
     public Text InfoMass;
     public Text InfoPosition;
     public Text InfoRychlost;
     public Text InfoSilovePusobeni;
+
+    //Planet move to
     public Dropdown DropboxMoveToPlanetPU;
+
+    //Planet follow
     public Dropdown DropboxFollowPlanetPU;
+
+    //Planet destroy
+    public Dropdown DropboxDestroyPlanetPU;
+
+    //Planet create or update
+    public Text CreateTitle;
+    public Text UpdateTitle;
+    public InputField CUPolohaX;
+    public InputField CUPolohaY;
+    public InputField CUPolohaZ;
+    public InputField CURychlostX;
+    public InputField CURychlostY;
+    public InputField CURychlostZ;
+    public InputField CURed;
+    public InputField CUGreen;
+    public InputField CUBlue;
+    public Slider CUScrollRed;
+    public Slider CUScrollGreen;
+    public Slider CUScrollBlue;
+    public GameObject CUColorPalette;
+    public InputField CUSize; 
+    public Toggle CUNoGravCB;
+    public Toggle CUNoMoveCB;
+    public Toggle CUIsProbeCB;
+    public Button CUCreateButton;
+    public Button CUUpdateButton;
+
+    #endregion
 
     //Activate
     private bool InfoActivated = false;
