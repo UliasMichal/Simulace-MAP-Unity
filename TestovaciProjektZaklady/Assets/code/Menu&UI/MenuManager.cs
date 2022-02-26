@@ -230,11 +230,18 @@ public class MenuManager : MonoBehaviour
     public void CreatePlanet()
     {
         float mass = ParserProOddelovace(CUMassObjektu.text);
+
         if (float.IsNaN(mass)) 
         {
             OpenErrorPU("Hodnota hmotnosti musí být validní èíslo");
             return;
         }
+
+        if (DoesItCauseNameConflict(CUNazevObjektu.text)) 
+        {
+            OpenErrorPU("Název musí být unikátní - pouze jeden objekt mùže mít daný název");
+        }
+
 
         GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         newObject.name = CUNazevObjektu.text;
@@ -245,6 +252,26 @@ public class MenuManager : MonoBehaviour
         LoadSimulation.AddTrailRenderer(newObject);
         LoadSimulation.AddPopisek(newObject);
         LoadSimulation.AddParentSilocar(newObject);
+        CloseAllPopUps();
+    }
+
+    public bool DoesItCauseNameConflict(string nameToCheck, bool isUpdate=false) 
+    {
+        foreach (Transform simulationObject in ObjektySimulace.transform)
+        {
+            if(simulationObject.name == nameToCheck) 
+            {
+                if (!isUpdate)
+                {
+                    return true;
+                }
+                else 
+                {
+                    isUpdate = false;
+                }
+            }
+        }
+        return false;
     }
 
     public void SelectPlanetToUpdateAndOpenUpdate()
@@ -261,6 +288,11 @@ public class MenuManager : MonoBehaviour
         {
             OpenErrorPU("Hodnota hmotnosti musí být validní èíslo\nV intervalu (0; 3.4E+38)");
             return;
+        }
+
+        if (DoesItCauseNameConflict(CUNazevObjektu.text))
+        {
+            OpenErrorPU("Název musí být unikátní - pouze jeden objekt mùže mít daný název");
         }
 
         objectToUpdate.name = CUNazevObjektu.text;

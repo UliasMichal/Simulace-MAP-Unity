@@ -110,12 +110,14 @@ public class SpaceObject : MonoBehaviour
             this.GetComponent<TrailRenderer>().materials = matArr;
             this.GetComponent<TrailRenderer>().materials[0] = defaultLine;
             this.GetComponent<TrailRenderer>().material.SetColor("_TintColor", toChange);
+            this.GetComponent<TrailRenderer>().time = float.PositiveInfinity;
         }
         else
         {
             Material invis = Resources.Load<Material>("Materials/Invis");
             Material[] matArr = { invis };
             this.GetComponent<TrailRenderer>().materials = matArr;
+            this.GetComponent<TrailRenderer>().time = 0f;
         }
         
     }
