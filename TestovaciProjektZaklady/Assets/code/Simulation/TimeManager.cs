@@ -101,9 +101,13 @@ public class TimeManager : MonoBehaviour
     public void ZastavitCas()
     {
         aktualniCasovyNasobek = CasNasobek.pauza;
+        timeSpeedUp.interactable = false;
+        timeSpeedDown.interactable = false;
     }
+
     public void SpustitCas()
     {
         aktualniCasovyNasobek = CasNasobek.jedna;
+        timeSpeedUp.interactable = true;
     }
 }

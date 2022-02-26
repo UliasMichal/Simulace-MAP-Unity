@@ -26,9 +26,9 @@ public class MainMenu : MonoBehaviour
 
     public void StartByDefaultFile()
     {
-        string path = Application.dataPath + "/LoadFileDefault.slf";
+        TextAsset file = Resources.Load<TextAsset>("Text/LoadFileDefault");
 
-        StartByFile(path);
+        StartByDefaultFileAsset(file);
     }
 
     public void LoadFileSelect()
@@ -117,5 +117,20 @@ public class MainMenu : MonoBehaviour
             textOfPopUpPath.text = pathToFile;
             popUpErrorObj.SetActive(true);
         }
+    }
+
+    void StartByDefaultFileAsset(TextAsset defaultFile)
+    {
+        string json = defaultFile.text;
+        Debug.Log(defaultFile.text);
+
+        SimulationData dataFromFile;
+        TransferSimulationDataBetweenScenes.HasDataToTransfer = true;
+        dataFromFile = JsonUtility.FromJson<SimulationData>(json);
+
+
+        TransferSimulationDataBetweenScenes.DataToTransfer = dataFromFile;
+
+        SceneManager.LoadScene(sceneName: "MainScene");
     }
 }

@@ -200,7 +200,7 @@ public class SpaceObject : MonoBehaviour
         this.transform.position += (rychlostObjektu / 100000 / 50 / 10 * (float)casovyNasobekSimulace);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
-        NicitelBlizkychObjektu(0.0001f);
+        NicitelBlizkychObjektu(0.0000000000001f);
     }
 
     void NicitelBlizkychObjektu(float distance) 

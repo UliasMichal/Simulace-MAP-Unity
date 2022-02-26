@@ -257,10 +257,9 @@ public class MenuManager : MonoBehaviour
     public void UpdatePlanet()
     {
         float mass = ParserProOddelovace(CUMassObjektu.text);
-        Debug.Log(float.IsNaN(mass));
-        if (float.IsNaN(mass))
+        if (float.IsNaN(mass) || mass <= 0)
         {
-            OpenErrorPU("Hodnota hmotnosti musí být validní èíslo");
+            OpenErrorPU("Hodnota hmotnosti musí být validní èíslo\nV intervalu (0; 3.4E+38)");
             return;
         }
 
@@ -616,6 +615,7 @@ public class MenuManager : MonoBehaviour
             Debug.Log("Simulation paused");
             PauseButton.SetActive(false);
             TimeManager.GetComponent<TimeManager>().ZastavitCas();
+            
         }
         else
         {
