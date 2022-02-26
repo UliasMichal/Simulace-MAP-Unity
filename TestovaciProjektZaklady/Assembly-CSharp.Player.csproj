@@ -66,6 +66,7 @@
     <Compile Include="Assets\code\Simulation\TimeManager.cs" />
     <Compile Include="Assets\code\Menu&amp;UI\CameraControl\FullMoveCamScript.cs" />
     <Compile Include="Assets\code\Data\LoadSimulation.cs" />
+    <Compile Include="Assets\code\Simulation\ProbeMotory.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

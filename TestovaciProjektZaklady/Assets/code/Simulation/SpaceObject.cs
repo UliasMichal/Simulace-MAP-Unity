@@ -44,6 +44,10 @@ public class SpaceObject : MonoBehaviour
         zobrazitDrahy = dataToLoad.zobrazitDrahy;
 
         isProbe = dataToLoad.isProbe;
+        if (isProbe) 
+        {
+            this.gameObject.AddComponent<ProbeMotory>();
+        }
 
         noGravityEffect = dataToLoad.noGravityEffect;
         noMovement = dataToLoad.noMovement;
@@ -71,17 +75,26 @@ public class SpaceObject : MonoBehaviour
     public void OperaceObjektu()
     {
         //Metoda popisující pohybové pùsobení objektu 
-        aktualniSilovePusobeni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni);
+        TimeManager.CasNasobek casovyNasobekSimulace = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
+        aktualniSilovePusobeni = CelkoveSilovePusobeniGravitace(vsechnaSilovaPusobeni) / 50 / 1100 * (float)casovyNasobekSimulace;
 
         if (!noMovement)
         {
             rychlost += aktualniSilovePusobeni;
-            MoveBy(rychlost); 
+            MoveBy(rychlost, casovyNasobekSimulace); 
         }
         
         OvladaniTrailRendereru();
         OvladaniPopisku();
         OvladaniLineRendereru();
+
+        if (isProbe)
+        {
+            if (this.GetComponent<ProbeMotory>() != null)
+            {
+                this.GetComponent<ProbeMotory>().PosunDleMotoru();
+            }
+        }
     }
 
     void OvladaniTrailRendereru() 
@@ -137,19 +150,20 @@ public class SpaceObject : MonoBehaviour
         }
         if (zobrazitSilocary) 
         {
-            GameObject hlavniSilocara = TvorbaObjektuSilocary(this.transform.position, aktualniSilovePusobeni, this.transform.localScale);
+            GameObject hlavniSilocara = TvorbaObjektuSilocary(this.transform.position, aktualniSilovePusobeni);
             hlavniSilocara.transform.SetParent(parentSilocar);
             Debug.Log(vsechnaSilovaPusobeni[0].x);
             foreach (Vector3 silocara in vsechnaSilovaPusobeni) 
             {
-                GameObject go = TvorbaObjektuSilocary(this.transform.position, silocara, this.transform.localScale);
+                GameObject go = TvorbaObjektuSilocary(this.transform.position, silocara);
                 go.transform.SetParent(parentSilocar);
             }
         }
     }
 
-    GameObject TvorbaObjektuSilocary(Vector3 poziceObjektu, Vector3 silocara, Vector3 scale) 
+    GameObject TvorbaObjektuSilocary(Vector3 poziceObjektu, Vector3 silocara) 
     {
+        //Metoda tvoøí siloèáry objektu
         GameObject gameObjectToReturn = new GameObject();
         LineRenderer createdLR = gameObjectToReturn.AddComponent<LineRenderer>();
 
@@ -179,17 +193,14 @@ public class SpaceObject : MonoBehaviour
         throw new System.ArgumentException("ERROR: Child of a given parent has not been found!");
     }
 
-    void MoveBy(Vector3 rychlostObjektu)
+    void MoveBy(Vector3 rychlostObjektu, TimeManager.CasNasobek casovyNasobekSimulace)
     {
         //Metoda pohne objektem dle gravitaèního pùsobení a vlastní rychlosti
-        TimeManager.CasNasobek a = GameObject.Find("TimeManager").GetComponent<TimeManager>().aktualniCasovyNasobek;
 
-        this.transform.position += (rychlostObjektu / 100000 / 4750 * (float)a);
-        //this.transform.position += (rychlostObjektu / 100000 / 50 * (float)a);
+        this.transform.position += (rychlostObjektu / 100000 / 50 / 10 * (float)casovyNasobekSimulace);
 
         //Detekuje vzdálenost mezi nejbližšími vesmírnými objekty a pøípadnì dojde k jejich znièení
-        NicitelBlizkychObjektu(0.000001f);
-
+        NicitelBlizkychObjektu(0.0001f);
     }
 
     void NicitelBlizkychObjektu(float distance) 
@@ -197,20 +208,21 @@ public class SpaceObject : MonoBehaviour
         //Metoda znièí objekt na urèitou vzdálenost (vzdálenost v UnityJednotkách)
         foreach (SpaceObject sO in (SpaceObject[])Resources.FindObjectsOfTypeAll(typeof(SpaceObject)))
         {
-            //if this != sO
             if (Mathf.Abs(sO.transform.position.magnitude - this.transform.position.magnitude) < distance && sO != this)
             {
                 if (sO.mass < this.mass)
                 {
+                    Debug.Log("Destroyed");
                     Destroy(sO.gameObject);
                 }
                 if (sO.mass > this.mass)
                 {
+                    Debug.Log("Destroyed");
                     Destroy(this.gameObject);
                 }
                 if (sO.mass == this.mass)
                 {
-                    // pøidat podmínku rychlosti?
+                    Debug.Log("Destroyed");
                     Destroy(sO.gameObject);
                     Destroy(this.gameObject);
                 }

@@ -56,6 +56,27 @@ public class TimeManager : MonoBehaviour
     // Update is called once per frame
     private void FixedUpdate()
     {
+        /*
+        if(casSimulace >= new DateTime(2022,1,2,0,0,0)) 
+        {
+            ZastavitCas();
+        }
+        */
+
+        /*
+        if (casSimulace >= new DateTime(2022, 1, 31, 0, 0, 0))
+        {
+            ZastavitCas();
+        }
+        */
+
+        /*
+        if (casSimulace >= new DateTime(2022, 2, 28, 0, 0, 0))
+        {
+            ZastavitCas();
+        }
+        */
+
         //FixedUpdate se volá každých 20 milisekund
         int milisecondsToAdd = 20 * ((int)aktualniCasovyNasobek);
         

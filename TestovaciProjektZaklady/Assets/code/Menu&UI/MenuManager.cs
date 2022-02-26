@@ -27,6 +27,15 @@ public class MenuManager : MonoBehaviour
     public InputField RotaceZ;
     public GameObject ControlPanelObject;
     public GameObject ControlPanelProbe;
+    public GameObject TextProbe;
+    public GameObject OvladaniProbe;
+    public Dropdown DropboxSelectProbe;
+    public InputField MotorX;
+    public InputField MotorY;
+    public InputField MotorZ;
+    public Toggle MotorXCB;
+    public Toggle MotorYCB;
+    public Toggle MotorZCB;
     public GameObject ControlPanelOptions;
 
     //Pop-ups
@@ -89,6 +98,7 @@ public class MenuManager : MonoBehaviour
     public Toggle CUNoGravCB;
     public Toggle CUNoMoveCB;
     public Toggle CUIsProbeCB;
+    public Scrollbar ScrollbarCU;
     public GameObject CUCreateButton;
     public GameObject CUUpdateButton;
 
@@ -183,6 +193,7 @@ public class MenuManager : MonoBehaviour
             CUNoMoveCB.isOn = false;
             CUIsProbeCB.isOn = false;
         }
+        ScrollbarCU.value = 1;
     }
 
     public void UpdatePalette()
@@ -216,8 +227,15 @@ public class MenuManager : MonoBehaviour
         CloseAllPopUps();
     }
 
-    public void CreatePlanet() 
+    public void CreatePlanet()
     {
+        float mass = ParserProOddelovace(CUMassObjektu.text);
+        if (float.IsNaN(mass)) 
+        {
+            OpenErrorPU("Hodnota hmotnosti musí být validní èíslo");
+            return;
+        }
+
         GameObject newObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
         newObject.name = CUNazevObjektu.text;
 
@@ -238,6 +256,14 @@ public class MenuManager : MonoBehaviour
 
     public void UpdatePlanet()
     {
+        float mass = ParserProOddelovace(CUMassObjektu.text);
+        Debug.Log(float.IsNaN(mass));
+        if (float.IsNaN(mass))
+        {
+            OpenErrorPU("Hodnota hmotnosti musí být validní èíslo");
+            return;
+        }
+
         objectToUpdate.name = CUNazevObjektu.text;
 
         SpaceObjectData dataToLoad = GetSpaceObjectData();
@@ -245,6 +271,23 @@ public class MenuManager : MonoBehaviour
         objectToUpdate.GetComponent<SpaceObject>().LoadFromData(dataToLoad);
 
         CloseAllPopUps();
+    }
+
+    public void UpdateProbe() 
+    {
+        ProbeMotory pmToUpdate = SpaceObject.GetChild(ObjektySimulace.transform, DropboxSelectProbe.options[DropboxSelectProbe.value].text).gameObject.GetComponent<ProbeMotory>();
+        UpdateProbeValues(pmToUpdate);
+    }
+
+    private void UpdateProbeValues(ProbeMotory toUpdate) 
+    {
+        toUpdate.Motory.x = ParserProOddelovace(MotorX.text);
+        toUpdate.Motory.y = ParserProOddelovace(MotorY.text);
+        toUpdate.Motory.z = ParserProOddelovace(MotorZ.text);
+
+        toUpdate.MotorX = MotorXCB.isOn;
+        toUpdate.MotorY = MotorYCB.isOn;
+        toUpdate.MotorZ = MotorZCB.isOn;
     }
 
     private SpaceObjectData GetSpaceObjectData() 
@@ -327,7 +370,7 @@ public class MenuManager : MonoBehaviour
 
     public void ChangeOfCM(int infoCM) 
     {
-        SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxPlanetOptionsPU.options[DropboxPlanetSelectPU.value].text).gameObject.GetComponent<SpaceObject>();
+        SpaceObject hledanaPlaneta = SpaceObject.GetChild(ObjektySimulace.transform, DropboxPlanetOptionsPU.options[DropboxPlanetOptionsPU.value].text).gameObject.GetComponent<SpaceObject>();
 
         if (infoCM == (int)OptionsPlanetCheckmarks.popisekCM) 
         {
@@ -362,6 +405,41 @@ public class MenuManager : MonoBehaviour
         dbToUpdate.value = 0;
         dbToUpdate.RefreshShownValue();
     }
+
+    public void UpdateProbeCP()
+    {
+        DropboxSelectProbe.options.Clear();
+        foreach (Transform t in ObjektySimulace.transform)
+        {
+            if (t.GetComponent<SpaceObject>().isProbe)
+            {
+                DropboxSelectProbe.options.Add(new Dropdown.OptionData() { text = t.name.ToString() });
+            }
+        }
+        
+        TextProbe.SetActive(DropboxSelectProbe.options.Count == 0);
+        OvladaniProbe.SetActive(DropboxSelectProbe.options.Count != 0);
+        if (DropboxSelectProbe.options.Count != 0)
+        {
+            DropboxSelectProbe.value = 0;
+            DropboxSelectProbe.RefreshShownValue();
+            LoadProbeValues();
+        }
+    }
+
+    public void LoadProbeValues() 
+    {
+        ProbeMotory hledanaProbe = SpaceObject.GetChild(ObjektySimulace.transform, DropboxSelectProbe.options[DropboxSelectProbe.value].text).gameObject.GetComponent<ProbeMotory>();
+
+        MotorX.text = hledanaProbe.Motory.x.ToString();
+        MotorY.text = hledanaProbe.Motory.y.ToString();
+        MotorZ.text = hledanaProbe.Motory.z.ToString();
+
+        MotorXCB.isOn = hledanaProbe.MotorX;
+        MotorYCB.isOn = hledanaProbe.MotorY;
+        MotorZCB.isOn = hledanaProbe.MotorZ;
+    }
+
 
     public void OpenPlanetOptionsPU()
     {
@@ -476,6 +554,7 @@ public class MenuManager : MonoBehaviour
         {
             return carkaVal;
         }
+
         return float.NaN;
     }
 
@@ -580,6 +659,7 @@ public class MenuManager : MonoBehaviour
         }
         if (CPSelect.value == (int)ControlPanelModes.probeCP)
         {
+            UpdateProbeCP();
             ControlPanelProbe.SetActive(true);
 
             ControlPanelCamera.SetActive(false);
