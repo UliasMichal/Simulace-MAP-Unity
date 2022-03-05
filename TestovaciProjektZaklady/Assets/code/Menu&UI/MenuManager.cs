@@ -339,9 +339,10 @@ public class MenuManager : MonoBehaviour
         spaceObjectDataInput.currentSpeed[2] = ParserProOddelovace(CURychlostZ.text);
 
         spaceObjectDataInput.colour = new float[3];
-        spaceObjectDataInput.colour[0] = ParserProOddelovace(CURed.text);
-        spaceObjectDataInput.colour[1] = ParserProOddelovace(CUGreen.text);
-        spaceObjectDataInput.colour[2] = ParserProOddelovace(CUBlue.text);
+        //Unity v kódu zpracovává RGB ve formátu floatu od 0.0 do 1.0
+        spaceObjectDataInput.colour[0] = ParserProOddelovace(CURed.text)/255;
+        spaceObjectDataInput.colour[1] = ParserProOddelovace(CUGreen.text)/255;
+        spaceObjectDataInput.colour[2] = ParserProOddelovace(CUBlue.text)/255;
 
         spaceObjectDataInput.scale = new float[3];
         spaceObjectDataInput.scale[0] = ParserProOddelovace(CUSize.text);
