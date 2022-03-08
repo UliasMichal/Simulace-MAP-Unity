@@ -525,10 +525,15 @@ public class MenuManager : MonoBehaviour
 
     public void SetPoziceKamery()
     {
+        Vector3 aktualniOffset = KameraASvetla.GetComponent<FullMoveCamScript>().OffsetPos;
         float xPos = ParserProOddelovace(PoziceX.text);
         if (xPos == float.NaN) 
         {
             OpenErrorPU(xPos + " - není validní èíslo pro pozici");
+        }
+        if(PoziceX.text == "") 
+        {
+            xPos = aktualniOffset.x;
         }
 
         float yPos = ParserProOddelovace(PoziceY.text);
@@ -536,11 +541,24 @@ public class MenuManager : MonoBehaviour
         {
             OpenErrorPU(yPos + " - není validní èíslo pro pozici");
         }
+        if (PoziceY.text == "")
+        {
+            yPos = aktualniOffset.y;
+        }
 
         float zPos = ParserProOddelovace(PoziceZ.text);
         if (zPos == float.NaN)
         {
             OpenErrorPU(zPos + " - není validní èíslo pro pozici");
+        }
+        if (PoziceZ.text == "")
+        {
+            zPos = aktualniOffset.z;
+        }
+
+        if(RotaceX.text == "" || RotaceX.text == "" || RotaceX.text == "") 
+        {
+            OpenErrorPU("Rotaci lze zmìnit pouze pro všechny 3 osy. Vyplnìte všechna pole rotace.");
         }
 
         float xRot = ParserProOddelovace(RotaceX.text);
@@ -560,12 +578,12 @@ public class MenuManager : MonoBehaviour
         {
             OpenErrorPU(zRot + " - není validní èíslo pro rotaci");
         }
+        
 
-        KameraASvetla.transform.position = new Vector3(xPos, yPos, zPos);
+        KameraASvetla.GetComponent<FullMoveCamScript>().Deactivate();
+        KameraASvetla.GetComponent<FullMoveCamScript>().OffsetPos = new Vector3(xPos, yPos, zPos);
 
-        Quaternion qRotace = new Quaternion();
-        qRotace.eulerAngles = new Vector3(xRot, yRot, zRot);
-        KameraASvetla.transform.rotation = qRotace;
+        KameraASvetla.transform.localRotation = Quaternion.Euler(new Vector3(xRot, yRot, zRot));
     }
 
     public void FollowPlanet()

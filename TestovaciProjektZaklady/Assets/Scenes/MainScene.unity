@@ -22791,7 +22791,7 @@ MonoBehaviour:
   PlayButton: {fileID: 183609555}
   CPSelect: {fileID: 1515523407}
   ControlPanelCamera: {fileID: 1420308897}
-  PoziceX: {fileID: 552248018}
+  PoziceX: {fileID: 1520136142}
   PoziceY: {fileID: 1790572225}
   PoziceZ: {fileID: 178718146}
   RotaceX: {fileID: 552248018}
